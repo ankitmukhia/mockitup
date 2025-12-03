@@ -8,13 +8,28 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { SOLID_COLORS } from "@/lib/constants";
 import { createSelectors } from "./create-selectors";
 
+type UpdateType = "noiseOpacity" | "blur" | "canvasRadius";
+
 interface MockupStore {
+  settings: {
+    noiseOpacity: number;
+    blur: number;
+    canvasRadius: number;
+  };
+  zoom: number;
+
+  // 3d
+  rotationX: number;
+  rotationY: number;
+  flipH: boolean;
+  flipV: boolean;
+
   resolution: { width: number; height: number };
   mockupImage: string | null;
   backgroundImage: string | null;
   gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null;
-  canvasSolidBackgroundColor: string;
-  solidBackgroundColor: Array<string>;
+  solidBackgroundColor: string;
+  solidBackgroundColors: Array<string>;
   colorPalette: {
     singles: SingleColor[];
     twoColorGradients: TwoColorGradient[];
@@ -23,6 +38,12 @@ interface MockupStore {
 }
 
 interface MockupStoreActions {
+  setSettings: (updateType: UpdateType, setting: number) => void;
+  setRotationX: (rotationX: number) => void;
+  setRotationY: (rotationY: number) => void;
+  setFlipH: (flipH: boolean) => void;
+  setFlipV: (flipV: boolean) => void;
+  setZoom: (zoom: number) => void;
   setResolution: (resolution: { width: number; height: number }) => void;
   setMockupImage: (mockupImage: string | null) => void;
   setBackgroundImage: (backgroundImage: string | null) => void;
@@ -30,7 +51,7 @@ interface MockupStoreActions {
     gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null
   ) => void;
   setSolidBackgroundColor: (newColor: string) => void;
-  setCanvasSolidBackgroundColor: (solidBackgroundColor: string) => void;
+  setSolidBackgroundColors: (solidBackgroundColor: string) => void;
   setColorPalette: (colorPalette: {
     singles: SingleColor[];
     twoColorGradients: TwoColorGradient[];
@@ -41,11 +62,21 @@ interface MockupStoreActions {
 const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
   persist(
     (set, get) => ({
+      settings: {
+        noiseOpacity: 0,
+        blur: 0,
+        canvasRadius: 0,
+      },
+      zoom: 0.75,
+      rotationX: 0,
+      rotationY: 0,
+      flipH: false,
+      flipV: false,
       mockupImage: null,
       backgroundImage: null,
       gradientBackgroundColor: null,
-      solidBackgroundColor: SOLID_COLORS,
-      canvasSolidBackgroundColor: "#3F4F44",
+      solidBackgroundColor: "#3F4F44",
+      solidBackgroundColors: SOLID_COLORS,
       resolution: { width: 2778, height: 1284 },
       colorPalette: {
         singles: [] as SingleColor[],
@@ -53,16 +84,36 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
         threeColorGradients: [] as ThreeColorGradient[],
       },
 
+      setRotationX: (rotationX) => set({ rotationX }),
+      setRotationY: (rotationY) => set({ rotationY }),
+      setFlipH: (flipH) => set({ flipH }),
+      setFlipV: (flipV) => set({ flipV }),
+      setSettings: (updateType, setting) => {
+        const { settings } = get();
+
+        switch (updateType) {
+          case "noiseOpacity":
+            set({ settings: { ...settings, noiseOpacity: setting } });
+            break;
+          case "blur":
+            set({ settings: { ...settings, blur: setting } });
+            break;
+          case "canvasRadius":
+            set({ settings: { ...settings, canvasRadius: setting } });
+            break;
+        }
+      },
+      setZoom: (zoom) => set({ zoom }),
       setMockupImage: (mockupImage) => set({ mockupImage }),
       setBackgroundImage: (backgroundImage) => set({ backgroundImage }),
       setGradientBackgroundColor: (gradientBackgroundColor) =>
         set({ gradientBackgroundColor }),
-      setSolidBackgroundColor: (newColor) => {
-        const { solidBackgroundColor } = get();
-        set({ solidBackgroundColor: [...solidBackgroundColor, newColor] });
+      setSolidBackgroundColor: (solidBackgroundColor) =>
+        set({ solidBackgroundColor: solidBackgroundColor }),
+      setSolidBackgroundColors: (newColor) => {
+        const { solidBackgroundColors } = get();
+        set({ solidBackgroundColors: [...solidBackgroundColors, newColor] });
       },
-      setCanvasSolidBackgroundColor: (solidBackgroundColor) =>
-        set({ canvasSolidBackgroundColor: solidBackgroundColor }),
       setResolution: (resolution) => set({ resolution }),
       setColorPalette: (colorPalette) => set({ colorPalette }),
     }),

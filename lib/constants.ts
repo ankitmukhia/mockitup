@@ -230,3 +230,11 @@ export const RESOLUTION_PRESETS = [
     category: CATEGORY_NAMES.LINKEDIN,
   },
 ];
+
+export const EXAMPLE_SEARCHES = [
+  "Nature",
+  "People",
+  "Food",
+  "Travel",
+  "Business",
+];
