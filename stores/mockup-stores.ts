@@ -21,11 +21,12 @@ interface MockupStore {
   // 3d
   rotationX: number;
   rotationY: number;
+  rotationZ: number;
   flipH: boolean;
   flipV: boolean;
 
   resolution: { width: number; height: number };
-  mockupImage: string | null;
+  mockupImage: string;
   backgroundImage: string | null;
   gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null;
   solidBackgroundColor: string;
@@ -41,11 +42,12 @@ interface MockupStoreActions {
   setSettings: (updateType: UpdateType, setting: number) => void;
   setRotationX: (rotationX: number) => void;
   setRotationY: (rotationY: number) => void;
+  setRotationZ: (rotationZ: number) => void;
   setFlipH: (flipH: boolean) => void;
   setFlipV: (flipV: boolean) => void;
   setZoom: (zoom: number) => void;
   setResolution: (resolution: { width: number; height: number }) => void;
-  setMockupImage: (mockupImage: string | null) => void;
+  setMockupImage: (mockupImage: string) => void;
   setBackgroundImage: (backgroundImage: string | null) => void;
   setGradientBackgroundColor: (
     gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null
@@ -72,7 +74,9 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
       rotationY: 0,
       flipH: false,
       flipV: false,
-      mockupImage: null,
+      rotationZ: 0,
+      mockupImage:
+        "https://res.cloudinary.com/dtxxjwdml/image/upload/v1764683481/aisabnqodcuu2ze8nbu7.png",
       backgroundImage: null,
       gradientBackgroundColor: null,
       solidBackgroundColor: "#3F4F44",
@@ -86,6 +90,7 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
 
       setRotationX: (rotationX) => set({ rotationX }),
       setRotationY: (rotationY) => set({ rotationY }),
+      setRotationZ: (rotationZ) => set({ rotationZ }),
       setFlipH: (flipH) => set({ flipH }),
       setFlipV: (flipV) => set({ flipV }),
       setSettings: (updateType, setting) => {

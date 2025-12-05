@@ -18,6 +18,7 @@ export const Preview = () => {
   const solidBackgroundColor = useMockupStore.use.solidBackgroundColor();
   const rotationX = useMockupStore.use.rotationX();
   const rotationY = useMockupStore.use.rotationY();
+  const rotationZ = useMockupStore.use.rotationZ();
   const flipH = useMockupStore.use.flipH();
   const flipV = useMockupStore.use.flipV();
 
@@ -88,12 +89,13 @@ export const Preview = () => {
     const scaleY = flipV ? -1 : 1;
     const translateX = rotationY * 0.2;
     const translateY = rotationX * -0.2;
+    const translateZ = rotationZ * 0.2;
 
     return `perspective(200em) translate(${translateX}%, ${translateY}%) scale(${
       zoom * scaleX
     }, ${
       zoom * scaleY
-    }) rotateX(${rotationX}deg) rotateY(${rotationY}deg) rotateZ(0deg) skewX(0deg) skewY(0deg)`;
+    }) rotateX(${rotationX}deg) rotateY(${rotationY}deg) rotateZ(${translateZ}deg) skewX(0deg) skewY(0deg)`;
   };
 
   return (
@@ -173,10 +175,7 @@ export const Preview = () => {
                 }}
               >
                 <Image
-                  src={
-                    mockupImage ||
-                    "https://res.cloudinary.com/dtxxjwdml/image/upload/v1764683481/aisabnqodcuu2ze8nbu7.png"
-                  }
+                  src={mockupImage}
                   onLoad={(e) => {
                     extractColorFromImage(e.target as HTMLImageElement);
                   }}

@@ -61,7 +61,7 @@ export const UploadImage: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     x="0px"
     y="0px"
     viewBox="0 0 20 20"
-    className="size-20"
+    className="size-6"
     {...props}
   >
     <path

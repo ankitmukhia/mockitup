@@ -125,6 +125,14 @@
   }
 }
 
+.slider::-webkit-slider-thumb {
+  @apply appearance-none bg-primary h-4 w-[1.5px];
+}
+
+.group:hover .slider::-webkit-slider-thumb {
+  @apply bg-orange-500;
+}
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
