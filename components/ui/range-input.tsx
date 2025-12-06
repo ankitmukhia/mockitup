@@ -2,8 +2,10 @@
 
 import { cn } from "@/lib/utils";
 import React, { useMemo } from "react";
+import { RANGE_THUMB_SIZE } from "@/lib/constants";
 
 interface RangeInputProps {
+  label: string;
   min: number;
   max: number;
   step: number;
@@ -11,9 +13,11 @@ interface RangeInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   fill?: boolean;
+  thumbSize?: RANGE_THUMB_SIZE;
 }
 
 export const RangeInput = ({
+  label,
   min,
   max,
   step,
@@ -21,6 +25,7 @@ export const RangeInput = ({
   onChange,
   className,
   fill = false,
+  thumbSize = RANGE_THUMB_SIZE.SMALL,
 }: RangeInputProps) => {
   const percentage = useMemo(() => {
     const safeMin = min || 0;
@@ -33,28 +38,35 @@ export const RangeInput = ({
   return (
     <div
       className={cn(
-        "relative flex items-center w-full h-8 bg-accent rounded-lg",
+        "group relative flex items-center w-full h-8 overflow-hidden bg-background rounded-lg",
         className
       )}
     >
       {fill && (
         <div
-          className="absolute left-0 top-0 bottom-0 bg-input rounded-lg pointer-events-none"
+          className="absolute inset-0 bg-muted rounded-lg pointer-events-none z-0"
           style={{ width: `${percentage}%` }}
         />
       )}
 
       <input
         type="range"
-        className={`slider w-full h-full appearance-none bg-transparent cursor-pointer rounded-lg ${
+        className={cn(
+          "w-full h-full appearance-none bg-transparent rounded-lg group-hover:cursor-grab active:cursor-grabbing z-10",
+          thumbSize,
           (percentage === 0 || percentage === 100) && "px-2"
-        }`}
+        )}
         min={min}
         max={max}
         step={step}
         value={value}
         onChange={onChange}
       />
+
+      <div className="absolute inset-0 flex items-center text-xs text-sidebar-foreground/70 justify-between pointer-events-none px-3">
+        <span>{label}</span>
+        <span>{Number(value).toFixed(2)}</span>
+      </div>
     </div>
   );
 };

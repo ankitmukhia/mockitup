@@ -76,7 +76,7 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
       flipV: false,
       rotationZ: 0,
       mockupImage:
-        "https://res.cloudinary.com/dtxxjwdml/image/upload/v1764683481/aisabnqodcuu2ze8nbu7.png",
+        "https://res.cloudinary.com/dtxxjwdml/image/upload/v1764985625/ewyhgstlvunmr5xesvqj.png",
       backgroundImage: null,
       gradientBackgroundColor: null,
       solidBackgroundColor: "#3F4F44",

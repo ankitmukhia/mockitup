@@ -4,7 +4,6 @@ import { useMockupStore } from "@/stores/mockup-stores";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { UploadImage } from "@/assets/svg";
 import ColorThief from "colorthief";
 import { blendPalette } from "@/lib/color-blender";
 
@@ -25,6 +24,9 @@ export const Preview = () => {
   // store actions
   const setColorPalette = useMockupStore.use.setColorPalette();
   const setMockupImage = useMockupStore.use.setMockupImage();
+  const { canvasRadius, blur, noiseOpacity } = useMockupStore.use.settings();
+
+  console.log(canvasRadius, blur, noiseOpacity);
 
   const mockupInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,9 +37,6 @@ export const Preview = () => {
     x: 0,
     y: 0,
   });
-  const [canvasRadius, setCanvasRadius] = useState(20);
-  const [blur, setBlur] = useState(60);
-  const [noiseOpacity, setNoiseOpacity] = useState(0);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -150,11 +149,17 @@ export const Preview = () => {
               }}
             />
 
-            <div className={`absolute inset-0 backdrop-blur-[${blur}px]`} />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                backdropFilter: `blur(${blur}px)`,
+              }}
+            />
             <div
               style={{
                 backgroundImage: "url(/noise.svg)",
-                opacity: noiseOpacity,
+                opacity: noiseOpacity / 100,
               }}
               className="absolute inset-0 z-100"
             />
@@ -185,7 +190,7 @@ export const Preview = () => {
                 />
 
                 <div className="absolute inset-0 z-10 opacity-0 hover:opacity-100 flex items-center justify-center transition-all duration-300 ease-in-out">
-                  <UploadImage />
+                  sososo
                 </div>
 
                 <Input

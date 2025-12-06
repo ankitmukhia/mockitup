@@ -1,3 +1,8 @@
+export enum RANGE_THUMB_SIZE {
+  BIG = "slider-big",
+  SMALL = "slider-small",
+}
+
 export enum CATEGORY_NAMES {
   REGULAR = "Regular",
   MOBILE_DEVICES = "Mobile Devices",
@@ -612,5 +617,246 @@ export const KAWAII_IMAGES = [
   {
     name: "Kawaii 20",
     src: "/kawaii/kawaii-20.png",
+  },
+];
+
+export const SHADOW_IMAGES = [
+  {
+    name: "Shadow 1",
+    src: "/shadow/shadow-1.webp",
+  },
+  {
+    name: "Shadow 2",
+    src: "/shadow/shadow-2.webp",
+  },
+  {
+    name: "Shadow 3",
+    src: "/shadow/shadow-3.webp",
+  },
+  {
+    name: "Shadow 4",
+    src: "/shadow/shadow-4.webp",
+  },
+  {
+    name: "Shadow 5",
+    src: "/shadow/shadow-5.webp",
+  },
+];
+
+export interface ScreenImage {
+  name: string;
+  src: string;
+  device: string;
+  variant: string;
+  type?: OpenType;
+}
+
+export enum OpenType {
+  ANDROID = "android",
+  IPAD = "ipad",
+  MACBOOK_AIR = "macbook-air",
+  MACBOOK_PRO = "macbook-pro",
+  IPHONE_17 = "iphone-17",
+  WATCH_SE = "se",
+  WATCH_ULTRA = "ultra",
+}
+
+export const SCREENS: ScreenImage[] = [
+  // Android
+  {
+    name: "Android Hazel",
+    src: "/screens/android/hazel.png",
+    device: "Android",
+    variant: "Hazel",
+    type: OpenType.ANDROID,
+  },
+  {
+    name: "Android Obsidian",
+    src: "/screens/android/obsidian.png",
+    device: "Android",
+    variant: "Obsidian",
+    type: OpenType.ANDROID,
+  },
+  {
+    name: "Android Snow",
+    src: "/screens/android/snow.png",
+    device: "Android",
+    variant: "Snow",
+    type: OpenType.ANDROID,
+  },
+
+  // iPad
+  {
+    name: "iPad Silver",
+    src: "/screens/ipad/silver.png",
+    device: "iPad",
+    variant: "Silver",
+    type: OpenType.IPAD,
+  },
+  {
+    name: "iPad Space Gray",
+    src: "/screens/ipad/space-gray.png",
+    device: "iPad",
+    variant: "Space Gray",
+    type: OpenType.IPAD,
+  },
+
+  // iPhone 17
+  {
+    name: "iPhone 17 Black",
+    src: "/screens/iphone/17/black.png",
+    device: "iPhone 17",
+    variant: "Black",
+    type: OpenType.IPHONE_17,
+  },
+  {
+    name: "iPhone 17 Lavender",
+    src: "/screens/iphone/17/lavender.png",
+    device: "iPhone 17",
+    variant: "Lavender",
+    type: OpenType.IPHONE_17,
+  },
+  {
+    name: "iPhone 17 Mist Blue",
+    src: "/screens/iphone/17/mist-blue.png",
+    device: "iPhone 17",
+    variant: "Mist Blue",
+    type: OpenType.IPHONE_17,
+  },
+  {
+    name: "iPhone 17 Sage",
+    src: "/screens/iphone/17/sage.png",
+    device: "iPhone 17",
+    variant: "Sage",
+    type: OpenType.IPHONE_17,
+  },
+  {
+    name: "iPhone 17 White",
+    src: "/screens/iphone/17/white.png",
+    device: "iPhone 17",
+    variant: "White",
+    type: OpenType.IPHONE_17,
+  },
+
+  // MacBook Air
+  {
+    name: "MacBook Air Midnight",
+    src: "/screens/mac/air/midnight.png",
+    device: "MacBook Air",
+    variant: "Midnight",
+    type: OpenType.MACBOOK_AIR,
+  },
+  {
+    name: "MacBook Air Silver",
+    src: "/screens/mac/air/silver.png",
+    device: "MacBook Air",
+    variant: "Silver",
+    type: OpenType.MACBOOK_AIR,
+  },
+  {
+    name: "MacBook Air Space Gray",
+    src: "/screens/mac/air/space-gray.png",
+    device: "MacBook Air",
+    variant: "Space Gray",
+    type: OpenType.MACBOOK_AIR,
+  },
+  {
+    name: "MacBook Air Starlight",
+    src: "/screens/mac/air/starlight.png",
+    device: "MacBook Air",
+    variant: "Starlight",
+    type: OpenType.MACBOOK_AIR,
+  },
+
+  {
+    name: "Mac Silver",
+    src: "/screens/mac/silver.png",
+    device: "Mac",
+    variant: "Silver",
+    type: OpenType.MACBOOK_AIR,
+  },
+
+  // Apple Watch
+  {
+    name: "Apple Watch Rose Gold",
+    src: "/screens/watch/rose-gold.png",
+    device: "Apple Watch",
+    variant: "Rose Gold",
+    type: OpenType.WATCH_SE,
+  },
+  {
+    name: "Apple Watch SE Aluminum Midnight",
+    src: "/screens/watch/se-aluminum-midnight.png",
+    device: "Apple Watch SE",
+    variant: "Aluminum Midnight",
+    type: OpenType.WATCH_SE,
+  },
+
+  // Apple Watch Ultra
+  {
+    name: "Apple Watch Ultra Black Ocean Band Navy",
+    src: "/screens/watch/ultra/black-ocean-band-navy.png",
+    device: "Apple Watch Ultra",
+    variant: "Black Ocean Band Navy",
+    type: OpenType.WATCH_ULTRA,
+  },
+  {
+    name: "Apple Watch Ultra Black Titanium Loop",
+    src: "/screens/watch/ultra/black-titanium-loop.png",
+    device: "Apple Watch Ultra",
+    variant: "Black Titanium Loop",
+    type: OpenType.WATCH_ULTRA,
+  },
+  {
+    name: "Apple Watch Ultra Black Trail Loop Black",
+    src: "/screens/watch/ultra/black-trail-loop-black.png",
+    device: "Apple Watch Ultra",
+    variant: "Black Trail Loop Black",
+    type: OpenType.WATCH_ULTRA,
+  },
+  {
+    name: "Apple Watch Ultra Natural",
+    src: "/screens/watch/ultra/ultra-natural.png",
+    device: "Apple Watch Ultra",
+    variant: "Natural",
+    type: OpenType.WATCH_ULTRA,
+  },
+];
+
+export const SCREEN_PREVIEW = [
+  {
+    device: "iPhone 17",
+    src: "/screens/preview/iphone/17.png",
+    type: OpenType.IPHONE_17,
+  },
+  {
+    device: "Apple Watch SE",
+    src: "/screens/preview/watch/se.png",
+    type: OpenType.WATCH_SE,
+  },
+  {
+    device: "Apple Watch Ultra",
+    src: "/screens/preview/watch/ultra.png",
+    type: OpenType.WATCH_ULTRA,
+  },
+  {
+    device: "MacBook Air",
+    src: "/screens/preview/mac/air.png",
+    type: OpenType.MACBOOK_AIR,
+  },
+  {
+    device: "MacBook Pro",
+    src: "/screens/preview/mac/pro.png",
+    type: OpenType.MACBOOK_PRO,
+  },
+  {
+    device: "iPad",
+    src: "/screens/preview/ipad/1.png",
+    type: OpenType.IPAD,
+  },
+  {
+    device: "Android",
+    src: "/screens/preview/android/1.png",
+    type: OpenType.ANDROID,
   },
 ];
