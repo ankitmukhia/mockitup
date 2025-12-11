@@ -361,7 +361,6 @@ export const Preview = () => {
                     style={{
                       transform: getDeviceTransform(),
                       transition: "transform 0.180s linear",
-                      transformStyle: "preserve-3d",
                       transformOrigin: "center center",
                     }}
                   >
@@ -382,9 +381,14 @@ export const Preview = () => {
                       >
                         <div
                           className={cn(
-                            `absolute will-change-transform w-full h-auto`,
+                            `absolute group will-change-transform w-full h-auto`,
                             `aspect-[${width}/${height}]`
                           )}
+                          onClick={() => {
+                            if (mockupInputRef.current) {
+                              mockupInputRef.current.click();
+                            }
+                          }}
                         >
                           {/* Device screen */}
                           <div
@@ -425,6 +429,26 @@ export const Preview = () => {
                               loading="eager"
                               fill
                               className="object-cover"
+                            />
+
+                            <div
+                              className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-2 transition-all duration-300 ease-in-out bg-black/50"
+                              style={{
+                                borderRadius: `${parseInt(borderRadius)}px`,
+                              }}
+                            >
+                              <UploadIcon className="size-6" />
+                              <span className="text-white text-xs">
+                                Upload Image
+                              </span>
+                            </div>
+
+                            <Input
+                              ref={mockupInputRef}
+                              onChange={handleMockUpImageSelect}
+                              accept="image/*"
+                              type="file"
+                              className="hidden"
                             />
                           </div>
                         </div>
