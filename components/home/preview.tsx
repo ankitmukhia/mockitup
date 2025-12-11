@@ -68,7 +68,7 @@ export const Preview = () => {
     containerSize.width && containerSize.height
       ? Math.min(
           (containerSize.width - padding) / resolution.width,
-          (containerSize.height - padding) / resolution.height,
+          (containerSize.height - padding) / resolution.height
         )
       : 0.5;
 
@@ -81,7 +81,7 @@ export const Preview = () => {
   };
 
   const handleMockUpImageSelect = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -157,20 +157,20 @@ export const Preview = () => {
                     backgroundPosition: "center",
                   }
                 : gradientBackgroundColor
-                  ? {
-                      backgroundImage: `linear-gradient(${
-                        gradientBackgroundColor.angle
-                      }deg, ${gradientBackgroundColor.first}, ${
-                        gradientBackgroundColor.second
-                      }${
-                        "third" in gradientBackgroundColor
-                          ? `, ${gradientBackgroundColor.third}`
-                          : ""
-                      })`,
-                    }
-                  : {
-                      backgroundColor: solidBackgroundColor || "transparent",
-                    }),
+                ? {
+                    backgroundImage: `linear-gradient(${
+                      gradientBackgroundColor.angle
+                    }deg, ${gradientBackgroundColor.first}, ${
+                      gradientBackgroundColor.second
+                    }${
+                      "third" in gradientBackgroundColor
+                        ? `, ${gradientBackgroundColor.third}`
+                        : ""
+                    })`,
+                  }
+                : {
+                    backgroundColor: solidBackgroundColor || "transparent",
+                  }),
             }}
           />
 
@@ -213,7 +213,7 @@ export const Preview = () => {
                   style={{
                     transform: getTransform(),
                     transition: "transform 0.180s linear",
-                    transformStyle: "preserve-3d",
+
                     transformOrigin: "center center",
                   }}
                 >
@@ -284,7 +284,7 @@ export const Preview = () => {
                         setIsImageLoaded(true);
                         const img = e.target as HTMLImageElement;
                         setImageAspectRatio(
-                          img.naturalWidth / img.naturalHeight,
+                          img.naturalWidth / img.naturalHeight
                         );
                         extractColorFromImage(img);
                       }}
@@ -294,7 +294,7 @@ export const Preview = () => {
                     />
 
                     <div
-                      className="absolute inset-0 z-10 opacity-0 hover:opacity-100 flex flex-col items-center justify-center gap-3 transition-all duration-300 ease-in-out bg-black/60"
+                      className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-3 transition-all duration-300 ease-in-out bg-black/50"
                       style={{
                         borderRadius: `${parseInt(borderRadius)}px`,
                       }}
@@ -318,7 +318,7 @@ export const Preview = () => {
                 const screen = SCREENS.find(
                   (s) =>
                     s.type === currentScreen.type &&
-                    s.variant === currentScreen.variant,
+                    s.variant === currentScreen.variant
                 );
                 if (!screen) return null;
 
@@ -383,7 +383,7 @@ export const Preview = () => {
                         <div
                           className={cn(
                             `absolute will-change-transform w-full h-auto`,
-                            `aspect-[${width}/${height}]`,
+                            `aspect-[${width}/${height}]`
                           )}
                         >
                           {/* Device screen */}
