@@ -18,7 +18,7 @@ export const SharpBorder: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 
 export const CurvedBorder: React.FC<React.SVGProps<SVGSVGElement>> = (
-  props
+  props,
 ) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
     <defs>
@@ -37,7 +37,7 @@ export const CurvedBorder: React.FC<React.SVGProps<SVGSVGElement>> = (
 );
 
 export const RoundedBorder: React.FC<React.SVGProps<SVGSVGElement>> = (
-  props
+  props,
 ) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
     <defs>
@@ -84,7 +84,7 @@ export const Noise: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 
 export const TransparentIcon: React.FC<React.SVGProps<SVGSVGElement>> = (
-  props
+  props,
 ) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -243,7 +243,7 @@ export const SparkleIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 
 export const PalettePickerIcon: React.FC<React.SVGProps<SVGSVGElement>> = (
-  props
+  props,
 ) => (
   <svg
     width="24px"

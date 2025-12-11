@@ -164,7 +164,7 @@ export const LeftSidebar = () => {
   const [screensPopoverOpen, setScreensPopoverOpen] = useState(false);
 
   const handleBackgroundSelect = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -215,7 +215,7 @@ export const LeftSidebar = () => {
               ) : (
                 <div className="flex items-center">
                   {SCREEN_PREVIEW.filter(
-                    (p) => p.type === currentScreen.type
+                    (p) => p.type === currentScreen.type,
                   ).map((preview) => (
                     <Image
                       key={preview.device}
@@ -247,19 +247,19 @@ export const LeftSidebar = () => {
               <div className="space-y-3">
                 {(() => {
                   const watches = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("Watch")
+                    p.device.includes("Watch"),
                   );
                   const macs = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("MacBook")
+                    p.device.includes("MacBook"),
                   );
                   const iphones = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("iPhone")
+                    p.device.includes("iPhone"),
                   );
                   const ipads = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("iPad")
+                    p.device.includes("iPad"),
                   );
                   const androids = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("Android")
+                    p.device.includes("Android"),
                   );
 
                   return (
@@ -317,7 +317,7 @@ export const LeftSidebar = () => {
                                   "relative w-full h-40 rounded-2xl overflow-hidden cursor-pointer",
                                   {
                                     "w-1/2": watches.length === 1,
-                                  }
+                                  },
                                 )}
                               >
                                 <div
@@ -369,7 +369,7 @@ export const LeftSidebar = () => {
                                   "relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer",
                                   {
                                     "w-1/2": iphones.length === 1,
-                                  }
+                                  },
                                 )}
                               >
                                 <div
@@ -420,7 +420,7 @@ export const LeftSidebar = () => {
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
                                     "w-1/2": androids.length === 1,
-                                  }
+                                  },
                                 )}
                               >
                                 <div
@@ -471,7 +471,7 @@ export const LeftSidebar = () => {
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
                                     "w-1/2": ipads.length === 1,
-                                  }
+                                  },
                                 )}
                               >
                                 <div
@@ -522,7 +522,7 @@ export const LeftSidebar = () => {
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
                                     "w-1/2": macs.length === 1,
-                                  }
+                                  },
                                 )}
                               >
                                 <div
@@ -560,7 +560,7 @@ export const LeftSidebar = () => {
             <div className="grid grid-cols-3 gap-1.5">
               {(() => {
                 const filteredScreens = SCREENS.filter(
-                  (p) => p.type === currentScreen.type
+                  (p) => p.type === currentScreen.type,
                 );
 
                 if (filteredScreens.length === 0) {
@@ -582,7 +582,7 @@ export const LeftSidebar = () => {
                               key={variant}
                               onClick={() => {
                                 setImageSettings(
-                                  variant.toLowerCase() as ImageSettingType
+                                  variant.toLowerCase() as ImageSettingType,
                                 );
                               }}
                             >
@@ -592,7 +592,7 @@ export const LeftSidebar = () => {
                                   {
                                     "outline outline-offset-1 outline-ring":
                                       isActive,
-                                  }
+                                  },
                                 )}
                               >
                                 <div
@@ -603,7 +603,7 @@ export const LeftSidebar = () => {
                                         index === 1,
                                       "outline-2 outline-offset-2 outline-white shadow-2xl":
                                         index === 3,
-                                    }
+                                    },
                                   )}
                                 />
 
@@ -617,7 +617,7 @@ export const LeftSidebar = () => {
                               </div>
                             </div>
                           );
-                        }
+                        },
                       )}
                     </>
                   );
@@ -637,7 +637,7 @@ export const LeftSidebar = () => {
                       {
                         "outline outline-offset-1 outline-ring":
                           screen.variant === currentScreen.variant,
-                      }
+                      },
                     )}
                   >
                     <Image
@@ -756,7 +756,7 @@ export const LeftSidebar = () => {
                             "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                             {
                               "rotate-30": index === 0,
-                            }
+                            },
                           )}
                         >
                           {index === 1 && (
@@ -814,14 +814,14 @@ export const LeftSidebar = () => {
                           key={index}
                           onClick={() =>
                             setShowAllTwoColorGradients(
-                              !showAllTwoColorGradients
+                              !showAllTwoColorGradients,
                             )
                           }
                           className={cn(
                             "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                             {
                               "rotate-30": index === 0,
-                            }
+                            },
                           )}
                         >
                           {index === 1 && (
@@ -880,14 +880,14 @@ export const LeftSidebar = () => {
                           key={index}
                           onClick={() =>
                             setShowAllThreeColorGradients(
-                              !showAllThreeColorGradients
+                              !showAllThreeColorGradients,
                             )
                           }
                           className={cn(
                             "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                             {
                               "rotate-30": index === 0,
-                            }
+                            },
                           )}
                         >
                           {index === 1 && (
@@ -954,7 +954,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (
@@ -1284,7 +1284,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (
@@ -1352,7 +1352,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (
@@ -1423,7 +1423,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (
@@ -1492,7 +1492,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (
@@ -1559,7 +1559,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (
@@ -1626,7 +1626,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (
@@ -1691,7 +1691,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (
@@ -1756,7 +1756,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          }
+                          },
                         )}
                       >
                         {index === 1 && (

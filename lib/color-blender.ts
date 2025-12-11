@@ -65,7 +65,7 @@ const getCombinations = <T>(arr: T[], size: number): T[][] => {
 
 // Convert angle to canvas coordinates
 const angleToCanvasCoordinates = (
-  angle: number
+  angle: number,
 ): { x1: number; y1: number } => {
   const rad = (angle * Math.PI) / 180;
   const distance = 100;
@@ -84,7 +84,7 @@ const createSingleColors = (palette: HexColor[]): SingleColor[] => {
 
 const createTwoColorGradients = (
   palette: HexColor[],
-  limit = 10
+  limit = 10,
 ): TwoColorGradient[] => {
   const combinations = getCombinations(palette, 2);
   const gradients: TwoColorGradient[] = [];
@@ -108,7 +108,7 @@ const createTwoColorGradients = (
 
 const createThreeColorGradients = (
   palette: HexColor[],
-  limit = 10
+  limit = 10,
 ): ThreeColorGradient[] => {
   const combinations = getCombinations(palette, 3);
 

@@ -75,7 +75,7 @@ export const PositionController = ({
   };
 
   const handleContainerPointerMove = (
-    e: React.PointerEvent<HTMLDivElement>
+    e: React.PointerEvent<HTMLDivElement>,
   ) => {
     if (!dotRef.current || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -94,7 +94,7 @@ export const PositionController = ({
         ref={containerRef}
         className={cn(
           "relative rounded-xl flex-1 w-full bg-background flex mx-auto overflow-hidden",
-          className
+          className,
         )}
         onPointerDown={(e) => {
           setIsDragging(true);
@@ -116,20 +116,20 @@ export const PositionController = ({
                 backgroundPosition: "center",
               }
             : gradientBackgroundColor
-            ? {
-                backgroundImage: `linear-gradient(${
-                  gradientBackgroundColor.angle
-                }deg, ${gradientBackgroundColor.first}, ${
-                  gradientBackgroundColor.second
-                }${
-                  "third" in gradientBackgroundColor
-                    ? `, ${gradientBackgroundColor.third}`
-                    : ""
-                })`,
-              }
-            : {
-                backgroundColor: solidBackgroundColor || "transparent",
-              }),
+              ? {
+                  backgroundImage: `linear-gradient(${
+                    gradientBackgroundColor.angle
+                  }deg, ${gradientBackgroundColor.first}, ${
+                    gradientBackgroundColor.second
+                  }${
+                    "third" in gradientBackgroundColor
+                      ? `, ${gradientBackgroundColor.third}`
+                      : ""
+                  })`,
+                }
+              : {
+                  backgroundColor: solidBackgroundColor || "transparent",
+                }),
         }}
       >
         <div
