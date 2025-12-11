@@ -240,10 +240,10 @@ export const RESOLUTION_PRESETS = [
 
 export const EXAMPLE_SEARCHES = [
   "Nature",
-  "People",
-  "Food",
-  "Travel",
-  "Business",
+  "Gradient",
+  "Glass",
+  "Abstract",
+  "Minimal",
 ];
 
 export const GRADIENTS_COLORS: (TwoColorGradient | ThreeColorGradient)[] = [

@@ -1,7 +1,11 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { ImageSettingType, useMockupStore } from "@/stores/mockup-stores";
+import {
+  ImageSettingType,
+  ImageStackType,
+  useMockupStore,
+} from "@/stores/mockup-stores";
 import { useEffect, useRef, useState } from "react";
 import { Resolutions } from "../resolutions";
 import {
@@ -87,6 +91,8 @@ export const LeftSidebar = () => {
   const imageSettingsColor = useMockupStore.use.imageSettingsColor();
   const borderRadius = useMockupStore.use.borderRadius();
   const concentricBorderRadius = useMockupStore.use.concentricBorderRadius();
+  const imageShadow = useMockupStore.use.imageShadow();
+  const imageStack = useMockupStore.use.imageStack();
 
   // ations
   const setCurrentScreen = useMockupStore.use.setCurrentScreen();
@@ -107,6 +113,8 @@ export const LeftSidebar = () => {
   const setBorderRadius = useMockupStore.use.setBorderRadius();
   const setConcentricBorderRadius =
     useMockupStore.use.setConcentricBorderRadius();
+  const setImageShadow = useMockupStore.use.setImageShadow();
+  const setImageStack = useMockupStore.use.setImageStack();
 
   // Tracking previous values for derived state pattern
   const [prevSolidBackgroundColor, setPrevSolidBackgroundColor] =
@@ -164,7 +172,7 @@ export const LeftSidebar = () => {
   const [screensPopoverOpen, setScreensPopoverOpen] = useState(false);
 
   const handleBackgroundSelect = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -215,7 +223,7 @@ export const LeftSidebar = () => {
               ) : (
                 <div className="flex items-center">
                   {SCREEN_PREVIEW.filter(
-                    (p) => p.type === currentScreen.type,
+                    (p) => p.type === currentScreen.type
                   ).map((preview) => (
                     <Image
                       key={preview.device}
@@ -247,19 +255,19 @@ export const LeftSidebar = () => {
               <div className="space-y-3">
                 {(() => {
                   const watches = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("Watch"),
+                    p.device.includes("Watch")
                   );
                   const macs = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("MacBook"),
+                    p.device.includes("MacBook")
                   );
                   const iphones = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("iPhone"),
+                    p.device.includes("iPhone")
                   );
                   const ipads = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("iPad"),
+                    p.device.includes("iPad")
                   );
                   const androids = SCREEN_PREVIEW.filter((p) =>
-                    p.device.includes("Android"),
+                    p.device.includes("Android")
                   );
 
                   return (
@@ -317,7 +325,7 @@ export const LeftSidebar = () => {
                                   "relative w-full h-40 rounded-2xl overflow-hidden cursor-pointer",
                                   {
                                     "w-1/2": watches.length === 1,
-                                  },
+                                  }
                                 )}
                               >
                                 <div
@@ -369,7 +377,7 @@ export const LeftSidebar = () => {
                                   "relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer",
                                   {
                                     "w-1/2": iphones.length === 1,
-                                  },
+                                  }
                                 )}
                               >
                                 <div
@@ -420,7 +428,7 @@ export const LeftSidebar = () => {
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
                                     "w-1/2": androids.length === 1,
-                                  },
+                                  }
                                 )}
                               >
                                 <div
@@ -471,7 +479,7 @@ export const LeftSidebar = () => {
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
                                     "w-1/2": ipads.length === 1,
-                                  },
+                                  }
                                 )}
                               >
                                 <div
@@ -522,7 +530,7 @@ export const LeftSidebar = () => {
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
                                     "w-1/2": macs.length === 1,
-                                  },
+                                  }
                                 )}
                               >
                                 <div
@@ -560,7 +568,7 @@ export const LeftSidebar = () => {
             <div className="grid grid-cols-3 gap-1.5">
               {(() => {
                 const filteredScreens = SCREENS.filter(
-                  (p) => p.type === currentScreen.type,
+                  (p) => p.type === currentScreen.type
                 );
 
                 if (filteredScreens.length === 0) {
@@ -582,7 +590,7 @@ export const LeftSidebar = () => {
                               key={variant}
                               onClick={() => {
                                 setImageSettings(
-                                  variant.toLowerCase() as ImageSettingType,
+                                  variant.toLowerCase() as ImageSettingType
                                 );
                               }}
                             >
@@ -592,18 +600,18 @@ export const LeftSidebar = () => {
                                   {
                                     "outline outline-offset-1 outline-ring":
                                       isActive,
-                                  },
+                                  }
                                 )}
                               >
                                 <div
                                   className={cn(
-                                    "absolute left-0 h-8 w-9 bg-muted rounded-br-xl z-10 shadow-2xl",
+                                    "absolute left-0 h-8 w-9 bg-muted rounded-br-2xl z-10 shadow-2xl",
                                     {
                                       "border-b-2 border-r-2 border-white shadow-2xl":
                                         index === 1,
                                       "outline-2 outline-offset-2 outline-white shadow-2xl":
                                         index === 3,
-                                    },
+                                    }
                                   )}
                                 />
 
@@ -617,7 +625,7 @@ export const LeftSidebar = () => {
                               </div>
                             </div>
                           );
-                        },
+                        }
                       )}
                     </>
                   );
@@ -637,7 +645,7 @@ export const LeftSidebar = () => {
                       {
                         "outline outline-offset-1 outline-ring":
                           screen.variant === currentScreen.variant,
-                      },
+                      }
                     )}
                   >
                     <Image
@@ -714,7 +722,109 @@ export const LeftSidebar = () => {
               Shadow
             </p>
 
-            <div className="grid grid-cols-2 gap-2"></div>
+            <div className="grid grid-cols-3 gap-1">
+              {Array.from(["None", "Soft", "Medium", "Hard"]).map((shadow) => {
+                const isActive = imageShadow === shadow;
+
+                return (
+                  <div
+                    key={shadow}
+                    onClick={() => {
+                      setImageShadow(
+                        shadow as "None" | "Soft" | "Medium" | "Hard"
+                      );
+                    }}
+                  >
+                    <div
+                      className={cn(
+                        "relative aspect-4/3 bg-background rounded-lg border overflow-hidden",
+                        {
+                          "outline outline-offset-1 outline-ring": isActive,
+                        }
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          `absolute h-7 w-8 rounded-br-xl bg-primary/80`,
+                          {
+                            "shadow-[2px_2px_6px_2px_hsl(0_0%_0%/0.3)] dark:shadow-[2px_2px_6px_2px_hsl(0_0%_100%/0.3)]":
+                              shadow === "Soft",
+                            "shadow-[2px_2px_6px_2px_hsl(0_0%_0%/0.6)] dark:shadow-[2px_2px_6px_2px_hsl(0_0%_100%/0.6)]":
+                              shadow === "Medium",
+                            "shadow-[2px_2px_6px_2px_hsl(0_0%_0%/0.9)] dark:shadow-[2px_2px_6px_2px_hsl(0_0%_100%/0.9)]":
+                              shadow === "Hard",
+                          }
+                        )}
+                      />
+                    </div>
+
+                    <div className="text-[10px] text-sidebar-foreground/40 text-center mt-1">
+                      {shadow}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <p className="ml-1 text-xs text-sidebar-foreground/40 uppercase">
+              Stack
+            </p>
+
+            <div className="flex flex-col gap-1.5">
+              {Array.from(["none", "stack-top", "stack-bottom"]).map(
+                (stack, stackIdx) => {
+                  const isActive = imageStack === stack;
+
+                  return (
+                    <div className="flex flex-col items-center gap-1.5">
+                      <div
+                        className={cn(
+                          "relative w-full aspect-4/2 bg-sidebar-border rounded-xl cursor-pointer group",
+                          {
+                            "outline outline-offset-1 outline-ring": isActive,
+                          }
+                        )}
+                        onClick={() => {
+                          setImageStack(stack as ImageStackType);
+                        }}
+                      >
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          {[
+                            { color: "#6e6e6e" },
+                            { color: "#404040" },
+                            { color: "#737373" },
+                          ].map((item, index) => (
+                            <div
+                              key={index}
+                              className="absolute rounded-xl shadow-2xl"
+                              style={{
+                                backgroundColor: item.color,
+                                width: `${50 - index * 8}%`,
+                                height: `${50 - index * 8}%`,
+                                transform:
+                                  stackIdx === 1
+                                    ? `translateY(${index * -9}px) scale(${
+                                        1 - index * 0.05
+                                      })`
+                                    : stackIdx === 2
+                                    ? `translateY(${index * 11}px) scale(${
+                                        1 - index * 0.05
+                                      })`
+                                    : "",
+                                zIndex: 3 - index,
+                                opacity: 1 - index * 0.15,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              )}
+            </div>
           </div>
         </TabsContent>
 
@@ -756,7 +866,7 @@ export const LeftSidebar = () => {
                             "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                             {
                               "rotate-30": index === 0,
-                            },
+                            }
                           )}
                         >
                           {index === 1 && (
@@ -814,14 +924,14 @@ export const LeftSidebar = () => {
                           key={index}
                           onClick={() =>
                             setShowAllTwoColorGradients(
-                              !showAllTwoColorGradients,
+                              !showAllTwoColorGradients
                             )
                           }
                           className={cn(
                             "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                             {
                               "rotate-30": index === 0,
-                            },
+                            }
                           )}
                         >
                           {index === 1 && (
@@ -880,14 +990,14 @@ export const LeftSidebar = () => {
                           key={index}
                           onClick={() =>
                             setShowAllThreeColorGradients(
-                              !showAllThreeColorGradients,
+                              !showAllThreeColorGradients
                             )
                           }
                           className={cn(
                             "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                             {
                               "rotate-30": index === 0,
-                            },
+                            }
                           )}
                         >
                           {index === 1 && (
@@ -954,7 +1064,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (
@@ -981,7 +1091,7 @@ export const LeftSidebar = () => {
                       quality={50}
                       width={50}
                       height={50}
-                      className="w-full h-10 bg-foreground rounded-xl cursor-pointer hover:scale-110 transition-transform"
+                      className="w-full h-10 bg-white rounded-xl cursor-pointer hover:scale-110 transition-transform"
                     />
                   ))}
               </div>
@@ -1189,7 +1299,7 @@ export const LeftSidebar = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center w-full h-full">
+                      <div className="flex flex-col items-center justify-center w-full flex-1 min-h-full">
                         <UnplashIcon className="size-10 mb-2 text-muted-foreground" />
                         <div className="flex flex-wrap gap-1 justify-center">
                           {EXAMPLE_SEARCHES.map((search, index) => (
@@ -1284,7 +1394,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (
@@ -1352,7 +1462,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (
@@ -1423,7 +1533,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (
@@ -1492,7 +1602,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (
@@ -1559,7 +1669,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (
@@ -1626,7 +1736,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (
@@ -1691,7 +1801,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (
@@ -1756,7 +1866,7 @@ export const LeftSidebar = () => {
                           "absolute w-full h-10 rotate-5 opacity-50 rounded-xl cursor-pointer bg-sidebar-border/70 flex items-center justify-center",
                           {
                             "rotate-30": index === 0,
-                          },
+                          }
                         )}
                       >
                         {index === 1 && (

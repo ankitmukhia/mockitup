@@ -21,6 +21,7 @@ type ScreenType =
 
 type UpdateType = "noiseOpacity" | "blur";
 export type ImageSettingType = "border" | "outline" | "glass";
+export type ImageStackType = "none" | "stack-top" | "stack-bottom";
 
 interface MockupStore {
   position: { x: number; y: number };
@@ -61,6 +62,8 @@ interface MockupStore {
   borderRadius: string;
   concentricBorderRadius: boolean;
   imageSettingsColor: string;
+  imageShadow: "None" | "Soft" | "Medium" | "Hard";
+  imageStack: ImageStackType;
 }
 
 interface MockupStoreActions {
@@ -80,7 +83,7 @@ interface MockupStoreActions {
   setMockupImage: (mockupImage: string) => void;
   setBackgroundImage: (backgroundImage: string | null) => void;
   setGradientBackgroundColor: (
-    gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null,
+    gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null
   ) => void;
   setSolidBackgroundColor: (newColor: string | null) => void;
   setSolidBackgroundColors: (solidBackgroundColor: string) => void;
@@ -94,6 +97,8 @@ interface MockupStoreActions {
   updateImageSettingsColor: (color: string) => void;
   setBorderRadius: (borderRadius: string) => void;
   setConcentricBorderRadius: (concentricBorderRadius: boolean) => void;
+  setImageShadow: (shadow: "None" | "Soft" | "Medium" | "Hard") => void;
+  setImageStack: (stack: ImageStackType) => void;
 }
 
 const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
@@ -116,6 +121,8 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
       concentricBorderRadius: false,
       borderRadius: "23",
       imageSettingsColor: "#fff",
+      imageShadow: "None",
+      imageStack: "none",
       zoom: 0.85,
       rotationX: 0,
       rotationY: 30,
@@ -147,6 +154,12 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
       },
       setConcentricBorderRadius: (concentricBorderRadius: boolean) => {
         set({ concentricBorderRadius });
+      },
+      setImageShadow: (shadow: "None" | "Soft" | "Medium" | "Hard") => {
+        set({ imageShadow: shadow });
+      },
+      setImageStack: (stack: ImageStackType) => {
+        set({ imageStack: stack });
       },
       setImageSettings: (type: ImageSettingType) => {
         switch (type) {
@@ -221,8 +234,8 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
           await del(name);
         },
       })),
-    },
-  ),
+    }
+  )
 );
 
 export const useMockupStore = createSelectors(useMockupStoreBase);

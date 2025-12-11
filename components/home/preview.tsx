@@ -35,6 +35,8 @@ export const Preview = () => {
   const imageSettingsColor = useMockupStore.use.imageSettingsColor();
   const borderRadius = useMockupStore.use.borderRadius();
   const concentricBorderRadius = useMockupStore.use.concentricBorderRadius();
+  const imageShadow = useMockupStore.use.imageShadow();
+  const imageStack = useMockupStore.use.imageStack();
 
   const mockupInputRef = useRef<HTMLInputElement>(null);
 
@@ -91,6 +93,19 @@ export const Preview = () => {
         setMockupImage(result);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const getShadowStyle = () => {
+    switch (imageShadow) {
+      case "Soft":
+        return "0px 0px 20px 10px hsl(0 0% 0% / 0.3)";
+      case "Medium":
+        return "0px 0px 40px 10px hsl(0 0% 0% / 0.6)";
+      case "Hard":
+        return "0px 0px 50px 10px hsl(0 0% 0% / 0.9)";
+      default:
+        return "none";
     }
   };
 
@@ -229,6 +244,8 @@ export const Preview = () => {
                           ? "auto"
                           : "100%",
                       aspectRatio: imageAspectRatio,
+                      boxShadow: getShadowStyle(),
+                      borderRadius: `${parseInt(borderRadius)}px`,
                     }}
                     onClick={() => {
                       if (mockupInputRef.current) {
@@ -236,6 +253,22 @@ export const Preview = () => {
                       }
                     }}
                   >
+                    {/* Top stack */}
+                    {imageStack === "stack-top" && (
+                      <>
+                        <div className="absolute -top-12 inset-x-20 rounded-4xl h-full bg-neutral-700" />
+                        <div className="absolute -top-8 inset-x-10 rounded-4xl h-full bg-black" />
+                      </>
+                    )}
+
+                    {/* Botom stack */}
+                    {imageStack === "stack-bottom" && (
+                      <>
+                        <div className="absolute -bottom-12 inset-x-20 rounded-4xl h-full bg-neutral-700" />
+                        <div className="absolute -bottom-8 inset-x-10 rounded-4xl h-full bg-black" />
+                      </>
+                    )}
+
                     {mockupImage &&
                       isImageLoaded &&
                       (imageSettings.outline ||
@@ -299,7 +332,7 @@ export const Preview = () => {
                         borderRadius: `${parseInt(borderRadius)}px`,
                       }}
                     >
-                      <UploadIcon className="size-10" />
+                      <UploadIcon className="size-10 text-white" />
                       <span className="text-white text-lg">Upload Image</span>
                     </div>
 
@@ -437,7 +470,7 @@ export const Preview = () => {
                                 borderRadius: `${parseInt(borderRadius)}px`,
                               }}
                             >
-                              <UploadIcon className="size-6" />
+                              <UploadIcon className="size-6 text-white" />
                               <span className="text-white text-xs">
                                 Upload Image
                               </span>
