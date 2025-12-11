@@ -778,7 +778,10 @@ export const LeftSidebar = () => {
                   const isActive = imageStack === stack;
 
                   return (
-                    <div className="flex flex-col items-center gap-1.5">
+                    <div
+                      key={stack}
+                      className="flex flex-col items-center gap-1.5"
+                    >
                       <div
                         className={cn(
                           "relative w-full aspect-4/2 bg-sidebar-border rounded-xl cursor-pointer group",

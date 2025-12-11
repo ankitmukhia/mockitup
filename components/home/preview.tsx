@@ -147,6 +147,7 @@ export const Preview = () => {
         className="relative flex items-center justify-center h-full w-full overflow-hidden"
       >
         <div
+          id="mockup-container"
           className="relative overflow-hidden"
           style={{
             width: `${resolution.width * scale}px`,
