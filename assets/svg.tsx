@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export const SharpBorder: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
     <defs>
       <clipPath id="sharp_svg__a">
         <path d="M0 0h24v24H0Z"></path>
@@ -20,7 +20,7 @@ export const SharpBorder: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 export const CurvedBorder: React.FC<React.SVGProps<SVGSVGElement>> = (
   props
 ) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
     <defs>
       <clipPath id="curved_svg__a">
         <path d="M0 0h24v24H0Z"></path>
@@ -39,7 +39,7 @@ export const CurvedBorder: React.FC<React.SVGProps<SVGSVGElement>> = (
 export const RoundedBorder: React.FC<React.SVGProps<SVGSVGElement>> = (
   props
 ) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
     <defs>
       <clipPath id="round_svg__a">
         <path d="M0 0h24v24H0Z"></path>
@@ -69,6 +69,7 @@ export const Noise: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     className="pointer-events-none fixed isolate z-10 opacity-70 mix-blend-soft-light"
     width="100%"
     height="100%"
+    {...props}
   >
     <filter id="noise">
       <feTurbulence

@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { useMockupStore } from "@/stores/mockup-stores";
+import { ImageSettingType, useMockupStore } from "@/stores/mockup-stores";
 import { useEffect, useRef, useState } from "react";
 import { Resolutions } from "../resolutions";
 import {
@@ -18,7 +18,13 @@ import {
   PopoverTrigger,
   PopoverAnchor,
 } from "@/components/ui/popover";
-import { PlusIcon, ChevronDownIcon } from "lucide-react";
+import {
+  PlusIcon,
+  ChevronDownIcon,
+  SearchIcon,
+  EqualIcon,
+  EqualNotIcon,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { HexColorPicker } from "react-colorful";
 import Image from "next/image";
@@ -43,20 +49,8 @@ import { SparkleIcon, PalettePickerIcon } from "@/assets/svg";
 import { RANGE_THUMB_SIZE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-type ScreenType =
-  | "default"
-  | "android"
-  | "ipad"
-  | "se"
-  | "ultra"
-  | "macbook-air"
-  | "macbook-pro"
-  | "iphone-17";
-
 export const LeftSidebar = () => {
   const backgroundInputRef = useRef<HTMLInputElement>(null);
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>("default");
-  console.log("currentScreen: ", currentScreen);
   const [hexColor, setHexColor] = useState("");
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [photos, setPhotos] = useState<Array<UnsplashPhoto>>([]);
@@ -78,13 +72,24 @@ export const LeftSidebar = () => {
   const [showAllKawaii, setShowAllKawaii] = useState(false);
   const [showAllShadows, setShowAllShadows] = useState(false);
 
+  // Local state for color picker to avoid lag
+  const [localBgColor, setLocalBgColor] = useState<string | null>(null);
+  const [localStyleColor, setLocalStyleColor] = useState<string>("");
+
   // states
+  const currentScreen = useMockupStore.use.currentScreen();
   const settings = useMockupStore.use.settings();
   const colorPalette = useMockupStore.use.colorPalette();
+  const solidBackgroundColor = useMockupStore.use.solidBackgroundColor();
   const solidBackgroundColors = useMockupStore.use.solidBackgroundColors();
   const mockupImage = useMockupStore.use.mockupImage();
+  const imageSettings = useMockupStore.use.imageSettings();
+  const imageSettingsColor = useMockupStore.use.imageSettingsColor();
+  const borderRadius = useMockupStore.use.borderRadius();
+  const concentricBorderRadius = useMockupStore.use.concentricBorderRadius();
 
   // ations
+  const setCurrentScreen = useMockupStore.use.setCurrentScreen();
   const setSettings = useMockupStore.use.setSettings();
   const setBackgroundImage = useMockupStore.use.setBackgroundImage();
   const setSolidBackgroundColor = useMockupStore.use.setSolidBackgroundColor();
@@ -92,6 +97,60 @@ export const LeftSidebar = () => {
     useMockupStore.use.setSolidBackgroundColors();
   const setGradientBackgroundColor =
     useMockupStore.use.setGradientBackgroundColor();
+  const setShadowOverlay = useMockupStore.use.setShadowOverlay();
+  const setRotationX = useMockupStore.use.setRotationX();
+  const setRotationY = useMockupStore.use.setRotationY();
+  const setRotationZ = useMockupStore.use.setRotationZ();
+  const setImageSettings = useMockupStore.use.setImageSettings();
+  const updateImageSettingsColor =
+    useMockupStore.use.updateImageSettingsColor();
+  const setBorderRadius = useMockupStore.use.setBorderRadius();
+  const setConcentricBorderRadius =
+    useMockupStore.use.setConcentricBorderRadius();
+
+  // Tracking previous values for derived state pattern
+  const [prevSolidBackgroundColor, setPrevSolidBackgroundColor] =
+    useState(solidBackgroundColor);
+  const [prevImageSettingsColor, setPrevImageSettingsColor] =
+    useState(imageSettingsColor);
+
+  if (solidBackgroundColor !== prevSolidBackgroundColor) {
+    setPrevSolidBackgroundColor(solidBackgroundColor);
+    setLocalBgColor(solidBackgroundColor);
+  }
+
+  if (imageSettingsColor !== prevImageSettingsColor) {
+    setPrevImageSettingsColor(imageSettingsColor);
+    setLocalStyleColor(imageSettingsColor);
+  }
+
+  const debouncedLocalColor = useDebounce(localBgColor, 300);
+  const debouncedLocalStyleColor = useDebounce(localStyleColor, 300);
+  useEffect(() => {
+    const validLengths = [4, 5, 7, 9];
+    if (
+      debouncedLocalColor &&
+      validLengths.includes(debouncedLocalColor.length)
+    ) {
+      setBackgroundImage(null);
+      setGradientBackgroundColor(null);
+      setSolidBackgroundColor(debouncedLocalColor);
+    }
+
+    if (
+      debouncedLocalStyleColor &&
+      validLengths.includes(debouncedLocalStyleColor.length)
+    ) {
+      updateImageSettingsColor(debouncedLocalStyleColor);
+    }
+  }, [
+    debouncedLocalColor,
+    debouncedLocalStyleColor,
+    setBackgroundImage,
+    setGradientBackgroundColor,
+    setSolidBackgroundColor,
+    updateImageSettingsColor,
+  ]);
 
   useEffect(() => {
     (async () => {
@@ -121,10 +180,11 @@ export const LeftSidebar = () => {
   const loadMore = async () => {
     const photos = await searchAction(searchDebounceQuery.trim(), page + 1);
     setPhotos((prev) => [...prev, ...photos]);
+    setPage((prev) => prev + 1);
   };
 
   return (
-    <div className="relative min-w-[200px] max-w-[200px] bg-sidebar p-2 rounded-xl overflow-y-auto no-scrollbar">
+    <div className="relative min-w-[200px] max-w-[200px] h-full bg-sidebar p-2 rounded-xl overflow-y-auto no-scrollbar">
       <Tabs defaultValue="effects">
         <TabsList className="flex flex-1 w-full">
           <TabsTrigger value="screens" className="border-none">
@@ -140,8 +200,8 @@ export const LeftSidebar = () => {
             open={screensPopoverOpen}
             onOpenChange={setScreensPopoverOpen}
           >
-            <PopoverTrigger className="flex items-center justify-between w-full bg-muted h-10 rounded-md px-2">
-              {currentScreen === "default" ? (
+            <PopoverTrigger className="flex items-center justify-between w-full bg-muted h-10 rounded-lg px-2">
+              {currentScreen.type === "default" ? (
                 <div className="flex items-center gap-2">
                   <Image
                     src={mockupImage}
@@ -154,21 +214,21 @@ export const LeftSidebar = () => {
                 </div>
               ) : (
                 <div className="flex items-center">
-                  {SCREEN_PREVIEW.filter((p) => p.type === currentScreen).map(
-                    (preview) => (
-                      <Image
-                        key={preview.device}
-                        src={preview.src}
-                        alt={preview.device}
-                        width={35}
-                        height={35}
-                        className="object-contain -ml-2"
-                      />
-                    )
-                  )}
+                  {SCREEN_PREVIEW.filter(
+                    (p) => p.type === currentScreen.type
+                  ).map((preview) => (
+                    <Image
+                      key={preview.device}
+                      src={preview.src}
+                      alt={preview.device}
+                      width={35}
+                      height={35}
+                      className="object-contain -ml-2"
+                    />
+                  ))}
                   <span className="text-sm">
                     {
-                      SCREEN_PREVIEW.find((p) => p.type === currentScreen)
+                      SCREEN_PREVIEW.find((p) => p.type === currentScreen.type)
                         ?.device
                     }
                   </span>
@@ -204,9 +264,35 @@ export const LeftSidebar = () => {
 
                   return (
                     <>
+                      <div className="space-y-2">
+                        <h1 className="ml-0.5 text-sm text-sidebar-foreground/40">
+                          Default
+                        </h1>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div
+                            onClick={() => {
+                              setRotationX(0);
+                              setRotationY(0);
+                              setRotationZ(0);
+                              setCurrentScreen({
+                                type: "default",
+                                variant: "default",
+                              });
+                            }}
+                            className="relative w-full h-40 rounded-2xl overflow-hidden cursor-pointer"
+                          >
+                            <Image
+                              src={mockupImage}
+                              alt="mockup"
+                              fill
+                              className="object-center"
+                            />
+                          </div>
+                        </div>
+                      </div>
                       {watches.length > 0 && (
                         <div className="space-y-2">
-                          <h1 className="text-sm text-foreground/50">
+                          <h1 className="ml-0.5 text-sm text-sidebar-foreground/40">
                             Apple Watch
                           </h1>
                           <div
@@ -218,7 +304,15 @@ export const LeftSidebar = () => {
                             {watches.map((preview) => (
                               <div
                                 key={preview.device}
-                                onClick={() => setCurrentScreen(preview.type)}
+                                onClick={() => {
+                                  setRotationX(0);
+                                  setRotationY(0);
+                                  setRotationZ(0);
+                                  setCurrentScreen({
+                                    type: preview.type,
+                                    variant: preview.defaultVariant,
+                                  });
+                                }}
                                 className={cn(
                                   "relative w-full h-40 rounded-2xl overflow-hidden cursor-pointer",
                                   {
@@ -250,7 +344,9 @@ export const LeftSidebar = () => {
 
                       {iphones.length > 0 && (
                         <div className="space-y-2">
-                          <h1 className="text-sm text-foreground/50">iPhone</h1>
+                          <h1 className="ml-0.5 text-sm text-sidebar-foreground/40">
+                            iPhone
+                          </h1>
                           <div
                             className={cn(`grid gap-2`, {
                               "grid-cols-2": iphones.length > 1,
@@ -260,7 +356,15 @@ export const LeftSidebar = () => {
                             {iphones.map((preview) => (
                               <div
                                 key={preview.device}
-                                onClick={() => setCurrentScreen(preview.type)}
+                                onClick={() => {
+                                  setRotationX(0);
+                                  setRotationY(0);
+                                  setRotationZ(0);
+                                  setCurrentScreen({
+                                    type: preview.type,
+                                    variant: preview.defaultVariant,
+                                  });
+                                }}
                                 className={cn(
                                   "relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer",
                                   {
@@ -291,7 +395,7 @@ export const LeftSidebar = () => {
 
                       {androids.length > 0 && (
                         <div className="space-y-2">
-                          <h1 className="text-sm text-foreground/50">
+                          <h1 className="ml-0.5 text-sm text-sidebar-foreground/40">
                             Android
                           </h1>
                           <div
@@ -303,7 +407,15 @@ export const LeftSidebar = () => {
                             {androids.map((preview) => (
                               <div
                                 key={preview.device}
-                                onClick={() => setCurrentScreen(preview.type)}
+                                onClick={() => {
+                                  setRotationX(0);
+                                  setRotationY(0);
+                                  setRotationZ(0);
+                                  setCurrentScreen({
+                                    type: preview.type,
+                                    variant: preview.defaultVariant,
+                                  });
+                                }}
                                 className={cn(
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
@@ -334,7 +446,9 @@ export const LeftSidebar = () => {
 
                       {ipads.length > 0 && (
                         <div className="space-y-2">
-                          <h1 className="text-sm text-foreground/50">Tablet</h1>
+                          <h1 className="ml-0.5 text-sm text-sidebar-foreground/40">
+                            Tablet
+                          </h1>
                           <div
                             className={cn(`grid gap-2`, {
                               "grid-cols-2": ipads.length > 1,
@@ -344,7 +458,15 @@ export const LeftSidebar = () => {
                             {ipads.map((preview) => (
                               <div
                                 key={preview.device}
-                                onClick={() => setCurrentScreen(preview.type)}
+                                onClick={() => {
+                                  setRotationX(0);
+                                  setRotationY(0);
+                                  setRotationZ(0);
+                                  setCurrentScreen({
+                                    type: preview.type,
+                                    variant: preview.defaultVariant,
+                                  });
+                                }}
                                 className={cn(
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
@@ -375,7 +497,7 @@ export const LeftSidebar = () => {
 
                       {macs.length > 0 && (
                         <div className="space-y-2">
-                          <h1 className="text-sm text-foreground/50">
+                          <h1 className="ml-0.5 text-sm text-sidebar-foreground/40">
                             Macbook
                           </h1>
                           <div
@@ -387,7 +509,15 @@ export const LeftSidebar = () => {
                             {macs.map((preview) => (
                               <div
                                 key={preview.device}
-                                onClick={() => setCurrentScreen(preview.type)}
+                                onClick={() => {
+                                  setRotationX(0);
+                                  setRotationY(0);
+                                  setRotationZ(0);
+                                  setCurrentScreen({
+                                    type: preview.type,
+                                    variant: preview.defaultVariant,
+                                  });
+                                }}
                                 className={cn(
                                   `relative flex-1 w-full h-40 rounded-2xl overflow-hidden cursor-pointer`,
                                   {
@@ -423,24 +553,168 @@ export const LeftSidebar = () => {
           </Popover>
 
           <div className="space-y-2">
-            <h1 className="text-sm text-foreground/50">STYLES</h1>
-            <div className="grid grid-cols-3 gap-2">
-              {SCREENS.filter((screen) => screen.type === currentScreen).map(
-                (screen) => (
+            <p className="text-xs text-sidebar-foreground/40 uppercase">
+              Style
+            </p>
+
+            <div className="grid grid-cols-3 gap-1.5">
+              {(() => {
+                const filteredScreens = SCREENS.filter(
+                  (p) => p.type === currentScreen.type
+                );
+
+                if (filteredScreens.length === 0) {
+                  return (
+                    <>
+                      {Array.from(["None", "Border", "Glass", "Outline"]).map(
+                        (variant, index) => {
+                          const isActive =
+                            (variant === "None" &&
+                              !imageSettings.border &&
+                              !imageSettings.glass &&
+                              !imageSettings.outline) ||
+                            (variant === "Border" && imageSettings.border) ||
+                            (variant === "Glass" && imageSettings.glass) ||
+                            (variant === "Outline" && imageSettings.outline);
+
+                          return (
+                            <div
+                              key={variant}
+                              onClick={() => {
+                                setImageSettings(
+                                  variant.toLowerCase() as ImageSettingType
+                                );
+                              }}
+                            >
+                              <div
+                                className={cn(
+                                  "relative aspect-4/3 bg-primary rounded-lg border overflow-hidden",
+                                  {
+                                    "outline outline-offset-1 outline-ring":
+                                      isActive,
+                                  }
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    "absolute left-0 h-8 w-9 bg-muted rounded-br-xl z-10 shadow-2xl",
+                                    {
+                                      "border-b-2 border-r-2 border-white shadow-2xl":
+                                        index === 1,
+                                      "outline-2 outline-offset-2 outline-white shadow-2xl":
+                                        index === 3,
+                                    }
+                                  )}
+                                />
+
+                                {index === 2 && (
+                                  <div className="absolute h-[35px] w-[39px] rounded-br-2xl bg-white shadow-2xl" />
+                                )}
+                              </div>
+
+                              <div className="text-[10px] text-sidebar-foreground/40 text-center mt-1">
+                                {variant}
+                              </div>
+                            </div>
+                          );
+                        }
+                      )}
+                    </>
+                  );
+                }
+
+                return filteredScreens.map((screen) => (
                   <div
                     key={screen.name}
-                    className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform border border-border"
+                    onClick={() =>
+                      setCurrentScreen({
+                        type: screen.type,
+                        variant: screen.variant,
+                      })
+                    }
+                    className={cn(
+                      "relative aspect-4/3 bg-background hover:bg-accent transition-colors rounded-lg cursor-pointer",
+                      {
+                        "outline outline-offset-1 outline-ring":
+                          screen.variant === currentScreen.variant,
+                      }
+                    )}
                   >
                     <Image
                       src={screen.src}
                       alt={screen.name}
                       fill
-                      className="object-contain"
+                      className="object-cover object-top"
                     />
                   </div>
-                )
-              )}
+                ));
+              })()}
             </div>
+          </div>
+
+          {(imageSettings.border || imageSettings.outline) && (
+            <div className="space-y-2">
+              <p className="text-xs text-sidebar-foreground/40 uppercase">
+                Choose Color
+              </p>
+
+              <Popover>
+                <div className="flex items-center rounded-md bg-muted">
+                  <div className="flex items-center justify-between w-full">
+                    <PopoverTrigger asChild>
+                      <Button
+                        className="h-8 px-4 rounded-none rounded-bl-md rounded-tl-md"
+                        style={{ backgroundColor: imageSettingsColor }}
+                      />
+                    </PopoverTrigger>
+                    <div className="relative">
+                      <span className="absolute top-[50%] -translate-y-1/2 pl-2">
+                        #
+                      </span>
+                      <Input
+                        type="text"
+                        name="hexColor"
+                        className="pl-4.5 outline-none focus:outline-none focus-visible:ring-0 rounded-none rounded-br-md rounded-tr-md h-8"
+                        value={localStyleColor.slice(1)}
+                        onChange={(e) => {
+                          const value = e.target.value.includes("#")
+                            ? e.target.value
+                            : "#" + e.target.value;
+                          setLocalStyleColor(value);
+                          updateImageSettingsColor(value);
+                        }}
+                        spellCheck={false}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                      />
+                    </div>
+                  </div>
+                  <PopoverAnchor className="absolute right-0" />
+                  <PopoverContent
+                    side="right"
+                    align="center"
+                    className="w-auto p-1"
+                  >
+                    <HexColorPicker
+                      color={localStyleColor.slice(1)}
+                      onChange={(newHex) => {
+                        setLocalStyleColor(newHex);
+                        updateImageSettingsColor(newHex);
+                      }}
+                    />
+                  </PopoverContent>
+                </div>
+              </Popover>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <p className="text-xs text-sidebar-foreground/40 uppercase">
+              Shadow
+            </p>
+
+            <div className="grid grid-cols-2 gap-2"></div>
           </div>
         </TabsContent>
 
@@ -659,10 +933,14 @@ export const LeftSidebar = () => {
                   <Image
                     key={image.name}
                     src={image.src}
+                    onClick={() => {
+                      setShadowOverlay(image.src);
+                    }}
+                    quality={50}
                     alt={image.name}
                     width={50}
                     height={50}
-                    className="w-full h-10 rounded-xl bg-foreground cursor-pointer hover:scale-110 transition-transform"
+                    className="w-full h-10 rounded-xl bg-white cursor-pointer hover:scale-110 transition-transform"
                   />
                 ))}
 
@@ -697,6 +975,10 @@ export const LeftSidebar = () => {
                       key={image.name}
                       src={image.src}
                       alt={image.name}
+                      onClick={() => {
+                        setShadowOverlay(image.src);
+                      }}
+                      quality={50}
                       width={50}
                       height={50}
                       className="w-full h-10 bg-foreground rounded-xl cursor-pointer hover:scale-110 transition-transform"
@@ -706,23 +988,43 @@ export const LeftSidebar = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="ml-1 text-xs text-sidebar-foreground/40 uppercase">
-                Border
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="ml-1 text-xs text-sidebar-foreground/40 uppercase">
+                  Border
+                </p>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  onClick={() =>
+                    setConcentricBorderRadius(!concentricBorderRadius)
+                  }
+                >
+                  {concentricBorderRadius ? (
+                    <EqualIcon className="size-4 text-sidebar-foreground/40" />
+                  ) : (
+                    <EqualNotIcon className="size-4 text-sidebar-foreground/40" />
+                  )}
+                </Button>
+              </div>
 
               <div className="flex gap-1.5 justify-between">
-                {[SharpBorder, CurvedBorder, RoundedBorder].map(
-                  (BorderComponent, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-center bg-muted flex-1 p-2 rounded-lg h-12"
-                    >
-                      <div className="size-5">
-                        <BorderComponent />
-                      </div>
+                {[
+                  { icon: SharpBorder, value: "0" },
+                  { icon: CurvedBorder, value: "23" },
+                  { icon: RoundedBorder, value: "50" },
+                ].map((BorderComponent, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-center bg-sidebar-border flex-1 p-2 rounded-lg h-12"
+                    onClick={() => {
+                      setBorderRadius(BorderComponent.value);
+                    }}
+                  >
+                    <div className="size-5">
+                      <BorderComponent.icon />
                     </div>
-                  )
-                )}
+                  </div>
+                ))}
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -733,10 +1035,8 @@ export const LeftSidebar = () => {
                   min={0}
                   max={100}
                   step={1}
-                  value={settings.canvasRadius}
-                  onChange={(e) =>
-                    setSettings("canvasRadius", Number(e.target.value))
-                  }
+                  value={parseInt(borderRadius) || 0}
+                  onChange={(e) => setBorderRadius(e.target.value)}
                 />
                 <RangeInput
                   label="Noise"
@@ -765,20 +1065,69 @@ export const LeftSidebar = () => {
             </div>
 
             <div className="flex items-center gap-1">
-              <div className="flex flex-1 items-center justify-center gap-2 bg-muted p-2 rounded-lg cursor-pointer">
+              <div
+                onClick={() => {
+                  setBackgroundImage(null);
+                  setGradientBackgroundColor(null);
+                  setSolidBackgroundColor("transparent");
+                  setShadowOverlay(null);
+                }}
+                className="flex flex-1 items-center justify-center gap-2 bg-muted border border-sidebar-border p-2 rounded-lg cursor-pointer"
+              >
                 <TransparentIcon className="size-6" />
               </div>
 
-              <div className="flex flex-1 items-center justify-center gap-2 bg-muted p-2 rounded-lg cursor-pointer">
-                <PalettePickerIcon className="size-6" />
-              </div>
+              <Popover>
+                <PopoverTrigger>
+                  <div className="flex flex-1 items-center justify-center gap-2 bg-muted border border-sidebar-border p-2 rounded-lg cursor-pointer">
+                    <PalettePickerIcon className="size-6" />
+                  </div>
+                </PopoverTrigger>
+                <PopoverAnchor className="absolute right-0" />
+                <PopoverContent
+                  side="right"
+                  align="center"
+                  className="w-fit flex flex-col gap-1 p-1"
+                >
+                  <HexColorPicker
+                    style={{
+                      width: "100%",
+                    }}
+                    color={localBgColor || ""}
+                    onChange={(color) => {
+                      setLocalBgColor(color);
+                      setSolidBackgroundColor(color);
+                    }}
+                  />
+
+                  <div className="relative">
+                    <span className="absolute top-[50%] -translate-y-1/2 pl-2">
+                      #
+                    </span>
+                    <Input
+                      type="text"
+                      name="hexColor"
+                      className="pl-5"
+                      value={localBgColor?.slice(1) || ""}
+                      onChange={(e) => {
+                        const value = e.target.value.includes("#")
+                          ? e.target.value
+                          : "#" + e.target.value;
+                        setLocalBgColor(value);
+                        setSolidBackgroundColor(value);
+                      }}
+                    />
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <div
                 onClick={() => {
                   if (backgroundInputRef.current) {
                     backgroundInputRef.current.click();
                   }
                 }}
-                className="flex flex-1 items-center justify-center gap-2 bg-muted p-2 rounded-lg cursor-pointer"
+                className="flex flex-1 items-center justify-center gap-2 bg-muted border border-sidebar-border p-2 rounded-lg cursor-pointer"
               >
                 <Input
                   ref={backgroundInputRef}
@@ -791,7 +1140,7 @@ export const LeftSidebar = () => {
               </div>
               <Popover>
                 <PopoverTrigger>
-                  <div className="flex flex-1 items-center justify-center gap-2 bg-muted p-2 rounded-lg cursor-pointer">
+                  <div className="flex flex-1 items-center justify-center gap-2 bg-muted border border-sidebar-border p-2 rounded-lg cursor-pointer">
                     <UnplashIcon className="size-6" />
                   </div>
                 </PopoverTrigger>
@@ -799,16 +1148,26 @@ export const LeftSidebar = () => {
                 <PopoverContent
                   side="right"
                   align="center"
-                  className="w-72 h-[42vh] p-2 overflow-y-auto no-scrollbar rounded-xl"
+                  className="relative w-72 h-[40dvh] p-2 overflow-y-auto no-scrollbar rounded-xl"
                 >
-                  <div className="relative flex flex-col gap-2 h-full w-full">
-                    <Input
-                      type="text"
-                      name="searchQuery"
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search..."
-                      className="rounded-lg"
-                    />
+                  <div className="flex flex-col gap-2 w-full min-h-full">
+                    <div className="relative">
+                      <div className="absolute top-[50%] -translate-y-1/2 pl-2">
+                        <SearchIcon className="size-5 text-muted-foreground" />
+                      </div>
+                      <Input
+                        type="text"
+                        name="searchQuery"
+                        className="pl-8 rounded-lg"
+                        placeholder="Search..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        spellCheck={false}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                      />
+                    </div>
 
                     {photos.length > 0 ? (
                       <div className="grid grid-cols-3 gap-1.5">
@@ -818,7 +1177,7 @@ export const LeftSidebar = () => {
                             onClick={() => {
                               setBackgroundImage(photo.urls.regular);
                             }}
-                            className="relative w-full h-16 cursor-pointer rounded-lg overflow-hidden"
+                            className="relative w-full h-20 cursor-pointer rounded-lg overflow-hidden"
                           >
                             <Image
                               src={photo.urls.small}
@@ -830,10 +1189,20 @@ export const LeftSidebar = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="flex flex-col justify-center w-full h-full">
+                      <div className="flex flex-col items-center justify-center w-full h-full">
+                        <UnplashIcon className="size-10 mb-2 text-muted-foreground" />
                         <div className="flex flex-wrap gap-1 justify-center">
                           {EXAMPLE_SEARCHES.map((search, index) => (
-                            <Button key={index}>{search}</Button>
+                            <Button
+                              key={index}
+                              variant="secondary"
+                              className="rounded-full"
+                              onClick={() => {
+                                setSearchQuery(search);
+                              }}
+                            >
+                              {search}
+                            </Button>
                           ))}
                         </div>
                       </div>
@@ -957,9 +1326,18 @@ export const LeftSidebar = () => {
                 {GRADIENTS_COLORS.slice(0, 3).map((gradient, index) => (
                   <div
                     key={index}
+                    onClick={() => {
+                      setSolidBackgroundColor(null);
+                      setBackgroundImage(null);
+                      setGradientBackgroundColor(gradient);
+                    }}
                     className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                     style={{
-                      background: gradient,
+                      backgroundImage: `linear-gradient(${gradient.angle}deg, ${
+                        gradient.first
+                      }, ${gradient.second}${
+                        "third" in gradient ? `, ${gradient.third}` : ""
+                      })`,
                     }}
                   />
                 ))}
@@ -993,9 +1371,18 @@ export const LeftSidebar = () => {
                   GRADIENTS_COLORS.slice(3).map((gradient, index) => (
                     <div
                       key={index}
+                      onClick={() => {
+                        setSolidBackgroundColor(null);
+                        setBackgroundImage(null);
+                        setGradientBackgroundColor(gradient);
+                      }}
                       className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                       style={{
-                        background: gradient,
+                        backgroundImage: `linear-gradient(${
+                          gradient.angle
+                        }deg, ${gradient.first}, ${gradient.second}${
+                          "third" in gradient ? `, ${gradient.third}` : ""
+                        })`,
                       }}
                     />
                   ))}
@@ -1012,6 +1399,12 @@ export const LeftSidebar = () => {
                     key={index}
                     src={image.src}
                     alt={image.name}
+                    onClick={() => {
+                      setSolidBackgroundColor(null);
+                      setGradientBackgroundColor(null);
+                      setBackgroundImage(image.src);
+                    }}
+                    quality={50}
                     width={100}
                     height={100}
                     className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
@@ -1050,9 +1443,15 @@ export const LeftSidebar = () => {
                     <Image
                       key={index}
                       src={image.src}
+                      onClick={() => {
+                        setSolidBackgroundColor(null);
+                        setGradientBackgroundColor(null);
+                        setBackgroundImage(image.src);
+                      }}
                       alt={image.name}
                       width={100}
                       height={100}
+                      quality={50}
                       className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                     />
                   ))}
@@ -1069,8 +1468,14 @@ export const LeftSidebar = () => {
                     key={index}
                     src={image.src}
                     alt={image.name}
+                    onClick={() => {
+                      setSolidBackgroundColor(null);
+                      setGradientBackgroundColor(null);
+                      setBackgroundImage(image.src);
+                    }}
                     width={100}
                     height={100}
+                    quality={50}
                     className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                   />
                 ))}
@@ -1107,9 +1512,15 @@ export const LeftSidebar = () => {
                     <Image
                       key={index}
                       src={image.src}
+                      onClick={() => {
+                        setSolidBackgroundColor(null);
+                        setGradientBackgroundColor(null);
+                        setBackgroundImage(image.src);
+                      }}
                       alt={image.name}
                       width={100}
                       height={100}
+                      quality={50}
                       className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                     />
                   ))}
@@ -1125,9 +1536,15 @@ export const LeftSidebar = () => {
                   <Image
                     key={index}
                     src={image.src}
+                    onClick={() => {
+                      setSolidBackgroundColor(null);
+                      setGradientBackgroundColor(null);
+                      setBackgroundImage(image.src);
+                    }}
                     alt={image.name}
                     width={100}
                     height={100}
+                    quality={50}
                     className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                   />
                 ))}
@@ -1162,9 +1579,15 @@ export const LeftSidebar = () => {
                     <Image
                       key={index}
                       src={image.src}
+                      onClick={() => {
+                        setSolidBackgroundColor(null);
+                        setGradientBackgroundColor(null);
+                        setBackgroundImage(image.src);
+                      }}
                       alt={image.name}
                       width={100}
                       height={100}
+                      quality={50}
                       className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                     />
                   ))}
@@ -1181,8 +1604,14 @@ export const LeftSidebar = () => {
                     key={index}
                     src={image.src}
                     alt={image.name}
+                    onClick={() => {
+                      setSolidBackgroundColor(null);
+                      setGradientBackgroundColor(null);
+                      setBackgroundImage(image.src);
+                    }}
                     width={100}
                     height={100}
+                    quality={50}
                     className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                   />
                 ))}
@@ -1218,8 +1647,14 @@ export const LeftSidebar = () => {
                       key={index}
                       src={image.src}
                       alt={image.name}
+                      onClick={() => {
+                        setSolidBackgroundColor(null);
+                        setGradientBackgroundColor(null);
+                        setBackgroundImage(image.src);
+                      }}
                       width={100}
                       height={100}
+                      quality={50}
                       className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                     />
                   ))}
@@ -1236,8 +1671,12 @@ export const LeftSidebar = () => {
                     key={index}
                     src={image.src}
                     alt={image.name}
+                    onClick={() => {
+                      setBackgroundImage(image.src);
+                    }}
                     width={100}
                     height={100}
+                    quality={50}
                     className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                   />
                 ))}
@@ -1273,8 +1712,12 @@ export const LeftSidebar = () => {
                       key={index}
                       src={image.src}
                       alt={image.name}
+                      onClick={() => {
+                        setBackgroundImage(image.src);
+                      }}
                       width={100}
                       height={100}
+                      quality={50}
                       className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                     />
                   ))}
@@ -1291,8 +1734,14 @@ export const LeftSidebar = () => {
                     key={index}
                     src={image.src}
                     alt={image.name}
+                    onClick={() => {
+                      setSolidBackgroundColor(null);
+                      setGradientBackgroundColor(null);
+                      setBackgroundImage(image.src);
+                    }}
                     width={100}
                     height={100}
+                    quality={50}
                     className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                   />
                 ))}
@@ -1328,8 +1777,14 @@ export const LeftSidebar = () => {
                       key={index}
                       src={image.src}
                       alt={image.name}
+                      onClick={() => {
+                        setSolidBackgroundColor(null);
+                        setGradientBackgroundColor(null);
+                        setBackgroundImage(image.src);
+                      }}
                       width={100}
                       height={100}
+                      quality={50}
                       className="w-full h-10 rounded-xl cursor-pointer hover:scale-110 transition-transform"
                     />
                   ))}

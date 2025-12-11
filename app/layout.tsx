@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { RootProvider } from "@/providers/root-provider";
+import { LoadingScreen } from "./components/loading-screen";
 import "./globals.css";
 
 const inter = Inter({
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
-        <RootProvider>{children}</RootProvider>
+        <RootProvider>
+          <LoadingScreen>{children}</LoadingScreen>
+        </RootProvider>
       </body>
     </html>
   );

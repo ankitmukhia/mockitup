@@ -4,7 +4,7 @@ import { RightSidebar } from "@/components/home/right-sidebar";
 
 export default function Home() {
   return (
-    <div className="flex h-svh p-2 gap-2 overflow-hidden">
+    <div className="flex items-center justify-center h-svh p-2 gap-2 overflow-hidden">
       <LeftSidebar />
       <Preview />
       <RightSidebar />

@@ -1,20 +1,26 @@
 "use client";
 
 import { useMockupStore } from "@/stores/mockup-stores";
+import { UploadIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import ColorThief from "colorthief";
 import { blendPalette } from "@/lib/color-blender";
+import { SCREENS, DEVICE_MASKS, OpenType } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
 export const Preview = () => {
   // states
+  const position = useMockupStore.use.position();
+  const currentScreen = useMockupStore.use.currentScreen();
   const zoom = useMockupStore.use.zoom();
   const resolution = useMockupStore.use.resolution();
   const mockupImage = useMockupStore.use.mockupImage();
   const backgroundImage = useMockupStore.use.backgroundImage();
   const gradientBackgroundColor = useMockupStore.use.gradientBackgroundColor();
   const solidBackgroundColor = useMockupStore.use.solidBackgroundColor();
+  const shadowOverlay = useMockupStore.use.shadowOverlay();
   const rotationX = useMockupStore.use.rotationX();
   const rotationY = useMockupStore.use.rotationY();
   const rotationZ = useMockupStore.use.rotationZ();
@@ -24,19 +30,25 @@ export const Preview = () => {
   // store actions
   const setColorPalette = useMockupStore.use.setColorPalette();
   const setMockupImage = useMockupStore.use.setMockupImage();
-  const { canvasRadius, blur, noiseOpacity } = useMockupStore.use.settings();
-
-  console.log(canvasRadius, blur, noiseOpacity);
+  const { blur, noiseOpacity } = useMockupStore.use.settings();
+  const imageSettings = useMockupStore.use.imageSettings();
+  const imageSettingsColor = useMockupStore.use.imageSettingsColor();
+  const borderRadius = useMockupStore.use.borderRadius();
+  const concentricBorderRadius = useMockupStore.use.concentricBorderRadius();
 
   const mockupInputRef = useRef<HTMLInputElement>(null);
 
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [position, setPosition] = useState({
-    x: 0,
-    y: 0,
-  });
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [prevMockupImage, setPrevMockupImage] = useState(mockupImage);
+  const [imageAspectRatio, setImageAspectRatio] = useState(0);
+
+  if (mockupImage !== prevMockupImage) {
+    setPrevMockupImage(mockupImage);
+    setIsImageLoaded(false);
+  }
 
   useEffect(() => {
     const container = containerRef.current;
@@ -51,7 +63,7 @@ export const Preview = () => {
     return () => observer.disconnect();
   }, []);
 
-  const padding = 64;
+  const padding = 67;
   const scale =
     containerSize.width && containerSize.height
       ? Math.min(
@@ -82,19 +94,35 @@ export const Preview = () => {
     }
   };
 
-  // Get 3D transform string
+  // 3D transform for default mockup image
   const getTransform = () => {
     const scaleX = flipH ? -1 : 1;
     const scaleY = flipV ? -1 : 1;
+
+    // Parallax effect: subtle position shift for realistic 3D perspective
     const translateX = rotationY * 0.2;
     const translateY = rotationX * -0.2;
     const translateZ = rotationZ * 0.2;
 
-    return `perspective(200em) translate(${translateX}%, ${translateY}%) scale(${
-      zoom * scaleX
-    }, ${
-      zoom * scaleY
+    const is3D = rotationX !== 0 || rotationY !== 0 || rotationZ !== 0;
+    const scaleFactor = is3D ? 0.8 : 0.9;
+    const finalZoom = zoom * scaleFactor;
+
+    return `perspective(200em) translate(${translateX}%, ${translateY}%) translate(${
+      position.x
+    }px, ${position.y}px) scale(${finalZoom * scaleX}, ${
+      finalZoom * scaleY
     }) rotateX(${rotationX}deg) rotateY(${rotationY}deg) rotateZ(${translateZ}deg) skewX(0deg) skewY(0deg)`;
+  };
+
+  const getDeviceTransform = () => {
+    const translateX = rotationX;
+    const translateY = rotationY;
+    const translateZ = rotationZ || 1;
+
+    return `translate(${translateX}%, ${translateY}%) translate(${
+      position.x
+    }px, ${position.y}px) scale(${zoom * translateZ})`;
   };
 
   return (
@@ -104,104 +132,308 @@ export const Preview = () => {
         className="relative flex items-center justify-center h-full w-full overflow-hidden"
       >
         <div
+          className="relative overflow-hidden"
           style={{
             width: `${resolution.width * scale}px`,
             height: `${resolution.height * scale}px`,
-            transform: `translate(${position.x}px, ${position.y}px)`,
+            ...(concentricBorderRadius && {
+              borderRadius: `${borderRadius}px`,
+            }),
           }}
         >
           <div
-            className="relative overflow-hidden"
+            className="absolute inset-0"
             style={{
               width: `${resolution.width}px`,
               height: `${resolution.height}px`,
               transform: `scale(${scale})`,
               transformOrigin: "top left",
-              borderRadius: `${canvasRadius}px`,
-            }}
-          >
-            <div
-              style={{
-                width: `${resolution.width}px`,
-                height: `${resolution.height}px`,
-                borderRadius: `${canvasRadius}px`,
-                ...(backgroundImage
-                  ? {
-                      backgroundImage: `url(${backgroundImage})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }
-                  : gradientBackgroundColor
-                  ? {
-                      backgroundImage: `linear-gradient(${
-                        gradientBackgroundColor.angle
-                      }deg, ${gradientBackgroundColor.first}, ${
-                        gradientBackgroundColor.second
-                      }${
-                        "third" in gradientBackgroundColor
-                          ? `, ${gradientBackgroundColor.third}`
-                          : ""
-                      })`,
-                    }
-                  : {
-                      backgroundColor: solidBackgroundColor,
-                    }),
-              }}
-            />
+              overflow: "hidden",
 
+              ...(backgroundImage
+                ? {
+                    backgroundImage: `url(${backgroundImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                : gradientBackgroundColor
+                ? {
+                    backgroundImage: `linear-gradient(${
+                      gradientBackgroundColor.angle
+                    }deg, ${gradientBackgroundColor.first}, ${
+                      gradientBackgroundColor.second
+                    }${
+                      "third" in gradientBackgroundColor
+                        ? `, ${gradientBackgroundColor.third}`
+                        : ""
+                    })`,
+                  }
+                : {
+                    backgroundColor: solidBackgroundColor || "transparent",
+                  }),
+            }}
+          />
+
+          {blur > 0 && (
             <div
+              className="absolute inset-0"
               style={{
-                position: "absolute",
-                inset: 0,
                 backdropFilter: `blur(${blur}px)`,
               }}
             />
+          )}
+
+          {noiseOpacity > 0 && (
             <div
+              className="absolute inset-0"
               style={{
                 backgroundImage: "url(/noise.svg)",
                 opacity: noiseOpacity / 100,
               }}
-              className="absolute inset-0 z-100"
             />
+          )}
 
-            <div className="absolute inset-0 z-100 flex items-center justify-center">
-              <div
-                className="relative h-full w-full cursor-pointer"
-                style={{
-                  transform: getTransform(),
-                  transition: "transform 0.130s linear",
-                  transformStyle: "preserve-3d",
-                  transformOrigin: "center center",
-                }}
-                onClick={() => {
-                  if (mockupInputRef.current) {
-                    mockupInputRef.current.click();
-                  }
-                }}
-              >
-                <Image
-                  src={mockupImage}
-                  onLoad={(e) => {
-                    extractColorFromImage(e.target as HTMLImageElement);
+          {shadowOverlay && (
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url(${shadowOverlay})`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                opacity: 0.5,
+              }}
+            />
+          )}
+
+          <div>
+            {currentScreen.type === "default" ? (
+              <div className="absolute inset-0">
+                <div
+                  className="relative w-full h-full flex items-center justify-center"
+                  style={{
+                    transform: getTransform(),
+                    transition: "transform 0.180s linear",
+                    transformStyle: "preserve-3d",
+                    transformOrigin: "center center",
                   }}
-                  alt="Uploaded mockup"
-                  fill
-                  className="object-contain"
-                />
+                >
+                  <div
+                    className="relative cursor-pointer group"
+                    style={{
+                      width:
+                        imageAspectRatio > resolution.width / resolution.height
+                          ? "100%"
+                          : "auto",
+                      height:
+                        imageAspectRatio > resolution.width / resolution.height
+                          ? "auto"
+                          : "100%",
+                      aspectRatio: imageAspectRatio,
+                    }}
+                    onClick={() => {
+                      if (mockupInputRef.current) {
+                        mockupInputRef.current.click();
+                      }
+                    }}
+                  >
+                    {mockupImage &&
+                      isImageLoaded &&
+                      (imageSettings.outline ||
+                        imageSettings.glass ||
+                        imageSettings.border) && (
+                        <div className="absolute -inset-[12px] overflow-hidden pointer-events-none">
+                          <div
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              ...(imageSettings.outline
+                                ? {
+                                    borderWidth: 2,
+                                    borderStyle: "solid",
+                                    borderColor: imageSettingsColor,
+                                  }
+                                : {}),
+                              ...(imageSettings.glass
+                                ? {
+                                    backgroundColor: "rgba(255, 255, 255, 0.4)",
+                                    backdropFilter: "blur(24px)",
+                                    WebkitBackdropFilter: "blur(24px)",
+                                  }
+                                : {}),
+                              ...(imageSettings.border
+                                ? { backgroundColor: imageSettingsColor }
+                                : {}),
+                              borderRadius: `${
+                                parseInt(borderRadius) > 0
+                                  ? parseInt(borderRadius) + 12
+                                  : 0
+                              }px`,
+                            }}
+                          />
+                        </div>
+                      )}
 
-                <div className="absolute inset-0 z-10 opacity-0 hover:opacity-100 flex items-center justify-center transition-all duration-300 ease-in-out">
-                  sososo
+                    <Image
+                      src={mockupImage}
+                      quality={100}
+                      loading="eager"
+                      style={{
+                        borderRadius: `${parseInt(borderRadius)}px`,
+                      }}
+                      onLoad={(e) => {
+                        setIsImageLoaded(true);
+                        const img = e.target as HTMLImageElement;
+                        setImageAspectRatio(
+                          img.naturalWidth / img.naturalHeight
+                        );
+                        extractColorFromImage(img);
+                      }}
+                      alt="Uploaded mockup"
+                      fill
+                      className="object-cover"
+                    />
+
+                    <div
+                      className="absolute inset-0 z-10 opacity-0 hover:opacity-100 flex flex-col items-center justify-center gap-3 transition-all duration-300 ease-in-out bg-black/60"
+                      style={{
+                        borderRadius: `${parseInt(borderRadius)}px`,
+                      }}
+                    >
+                      <UploadIcon className="size-10" />
+                      <span className="text-white text-lg">Upload Image</span>
+                    </div>
+
+                    <Input
+                      ref={mockupInputRef}
+                      onChange={handleMockUpImageSelect}
+                      accept="image/*"
+                      type="file"
+                      className="hidden"
+                    />
+                  </div>
                 </div>
-
-                <Input
-                  ref={mockupInputRef}
-                  onChange={handleMockUpImageSelect}
-                  accept="image/*"
-                  type="file"
-                  className="hidden"
-                />
               </div>
-            </div>
+            ) : (
+              (() => {
+                const screen = SCREENS.find(
+                  (s) =>
+                    s.type === currentScreen.type &&
+                    s.variant === currentScreen.variant
+                );
+                if (!screen) return null;
+
+                const getDeviceScale = (type: string) => {
+                  switch (type) {
+                    case OpenType.IPHONE_17:
+                      return 1.244;
+                    case OpenType.ANDROID:
+                      return 1.238;
+                    case OpenType.IPAD:
+                      return 1.238;
+                    case OpenType.MACBOOK_AIR:
+                    case OpenType.MACBOOK_PRO:
+                      return 1.49;
+                    case OpenType.WATCH_SE:
+                      return 1.99;
+                    case OpenType.WATCH_ULTRA:
+                      return 1.9;
+                    default:
+                      return 1.1;
+                  }
+                };
+
+                const deviceAssetScale = getDeviceScale(currentScreen.type);
+                const maskPath = DEVICE_MASKS[currentScreen.type];
+
+                const [width, height] = screen.screenSize
+                  .split("/")
+                  .map(Number);
+                const screenAspectRatio = width / height;
+                const containerAspectRatio =
+                  resolution.width / resolution.height;
+
+                const targetFill = 0.75; // target 75% of container for the whole asset
+                const wrapperPercent = (targetFill / deviceAssetScale) * 100;
+
+                return (
+                  <div
+                    className="will-change-transform absolute inset-0"
+                    style={{
+                      transform: getDeviceTransform(),
+                      transition: "transform 0.180s linear",
+                      transformStyle: "preserve-3d",
+                      transformOrigin: "center center",
+                    }}
+                  >
+                    <div className="relative flex items-center justify-center w-full h-full">
+                      <div
+                        className="relative flex items-center justify-center"
+                        style={{
+                          width:
+                            screenAspectRatio > containerAspectRatio
+                              ? `${wrapperPercent}%`
+                              : "auto",
+                          height:
+                            screenAspectRatio > containerAspectRatio
+                              ? "auto"
+                              : `${wrapperPercent}%`,
+                          aspectRatio: `${width}/${height}`,
+                        }}
+                      >
+                        <div
+                          className={cn(
+                            `absolute will-change-transform w-full h-auto`,
+                            `aspect-[${width}/${height}]`
+                          )}
+                        >
+                          {/* Device screen */}
+                          <div
+                            className="pointer-events-none w-full h-full absolute top-0 left-0 z-1"
+                            style={{
+                              transform: `scale(${deviceAssetScale})`,
+                            }}
+                          >
+                            <Image
+                              src={screen.src}
+                              alt="Screen"
+                              quality={100}
+                              loading="eager"
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+
+                          {/* Device mask */}
+                          <div
+                            className="w-full h-full"
+                            style={{
+                              aspectRatio: `${width}/${height}`,
+                              maskImage: `url(${maskPath})`,
+                              maskPosition: "center",
+                              maskRepeat: "no-repeat",
+                              maskSize: "100% 100%",
+                              WebkitMaskImage: `url(${maskPath})`,
+                              WebkitMaskPosition: "center",
+                              WebkitMaskRepeat: "no-repeat",
+                              WebkitMaskSize: "100% 100%",
+                            }}
+                          >
+                            <Image
+                              src={mockupImage}
+                              alt="Screen Content"
+                              quality={100}
+                              loading="eager"
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()
+            )}
           </div>
         </div>
       </div>

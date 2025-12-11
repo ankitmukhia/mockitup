@@ -89,7 +89,7 @@ const createTwoColorGradients = (
   const combinations = getCombinations(palette, 2);
   const gradients: TwoColorGradient[] = [];
 
-  for (let combo of combinations) {
+  for (const combo of combinations) {
     if (gradients.length >= limit) break;
 
     const angle = Math.floor(Math.random() * 360);
@@ -114,7 +114,7 @@ const createThreeColorGradients = (
 
   const gradients: ThreeColorGradient[] = [];
 
-  for (let combo of combinations) {
+  for (const combo of combinations) {
     if (gradients.length >= limit) break;
 
     const angle = Math.floor(Math.random() * 360);

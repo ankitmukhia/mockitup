@@ -1,3 +1,5 @@
+import { TwoColorGradient, ThreeColorGradient } from "./color-blender";
+
 export enum RANGE_THUMB_SIZE {
   BIG = "slider-big",
   SMALL = "slider-small",
@@ -244,30 +246,128 @@ export const EXAMPLE_SEARCHES = [
   "Business",
 ];
 
-export const GRADIENTS_COLORS = [
-  "linear-gradient(140deg, #ff6432 12.8%, #ff0065 43.52%, #7b2eff 84.34%)",
-  "linear-gradient(140deg,#f4e5f0,#e536ab,#5c03bc,#0e0725)",
-  "linear-gradient(135deg,#eeddf3,#ee92b1,#6330b4)",
-  "linear-gradient(113.96deg, rgb(69, 190, 232) 13.54%, rgb(214, 161, 172) 50%, rgb(232, 140, 93) 85.42%)",
-  "linear-gradient(113.96deg, rgb(69, 233, 159) 11.98%, rgb(213, 168, 155) 50%, rgb(232, 70, 152) 85.42%)",
-  "linear-gradient(113.96deg, rgb(69, 223, 232) 11.98%, rgb(211, 170, 175) 50%, rgb(232, 103, 100) 85.42%)",
-  "linear-gradient(293.96deg, rgb(160, 233, 125) 11.46%, rgb(169, 203, 177) 50%, rgb(192, 128, 232) 88.54%)",
-  "linear-gradient(-45deg, rgb(114, 122, 154), rgb(216, 219, 233))",
-  "linear-gradient(135deg, rgb(48, 48, 48), rgb(16, 16, 16))",
-  "linear-gradient(135deg, rgb(79, 172, 254), rgb(0, 242, 254))",
-  "linear-gradient(135deg, rgb(10, 207, 254), rgb(73, 90, 255))",
-  "linear-gradient(-45deg, rgb(61, 78, 129) 0%, rgb(87, 83, 201) 48%, rgb(110, 127, 243) 100%)",
-  "linear-gradient(135deg, rgb(198, 255, 221), rgb(251, 215, 134), rgb(247, 121, 125))",
-  "linear-gradient(135deg, rgb(248, 208, 129), rgb(238, 129, 68))",
-  "linear-gradient(-45deg, rgb(248, 54, 0) 0%, rgb(249, 212, 35) 100%)",
-  "linear-gradient(135deg, rgb(212, 252, 121), rgb(150, 230, 161))",
-  "linear-gradient(135deg, rgb(67, 233, 123), rgb(56, 249, 215))",
-  "linear-gradient(135deg, rgb(249, 240, 71), rgb(15, 216, 80))",
-  "linear-gradient(-225deg, rgb(105, 234, 203) 0%, rgb(234, 204, 248) 48%, rgb(102, 84, 241) 100%)",
-  "linear-gradient(135deg, rgb(215, 235, 235), rgb(244, 175, 233), rgb(157, 126, 243))",
-  "linear-gradient(-45deg, rgb(80, 82, 133) 0%, rgb(88, 94, 146) 12%, rgb(101, 104, 159) 25%, rgb(116, 116, 176) 37%, rgb(126, 126, 187) 50%, rgb(131, 137, 199) 62%, rgb(151, 149, 212) 75%, rgb(162, 161, 220) 87%, rgb(181, 174, 228) 100%)",
-  "linear-gradient(113.96deg, #45BEE8 13.54%, #D6A1AC 50%, #E88C5D 85.42%)",
-  "linear-gradient(113.96deg, #45E99F 11.98%, #D5A89B 50%, #E84698 85.42%)",
+export const GRADIENTS_COLORS: (TwoColorGradient | ThreeColorGradient)[] = [
+  {
+    first: "#FF6432",
+    second: "#FF0065",
+    third: "#7B2EFF",
+    angle: 140,
+    x1: -76.6,
+    y1: 64.3,
+  },
+  {
+    first: "#F4E5F0",
+    second: "#E536AB",
+    third: "#5C03BC",
+    angle: 140,
+    x1: -76.6,
+    y1: 64.3,
+  },
+  {
+    first: "#EEDDF3",
+    second: "#EE92B1",
+    third: "#6330B4",
+    angle: 135,
+    x1: -70.7,
+    y1: 70.7,
+  },
+  {
+    first: "#45BEE8",
+    second: "#D6A1AC",
+    third: "#E88C5D",
+    angle: 113.96,
+    x1: -39.3,
+    y1: 91.2,
+  },
+  {
+    first: "#45E99F",
+    second: "#D5A89B",
+    third: "#E84698",
+    angle: 113.96,
+    x1: -39.3,
+    y1: 91.2,
+  },
+  {
+    first: "#45DFE8",
+    second: "#D3AAB0",
+    third: "#E86764",
+    angle: 113.96,
+    x1: -39.3,
+    y1: 91.2,
+  },
+  {
+    first: "#A0E97D",
+    second: "#A9CBB1",
+    third: "#C080E8",
+    angle: 293.96,
+    x1: 27.5,
+    y1: -96.1,
+  },
+  { first: "#727A9A", second: "#D8DBE9", angle: -45, x1: 70.7, y1: -70.7 },
+  { first: "#303030", second: "#101010", angle: 135, x1: -70.7, y1: 70.7 },
+  { first: "#4FACFE", second: "#00F2FE", angle: 135, x1: -70.7, y1: 70.7 },
+  { first: "#0ACFFE", second: "#495AFF", angle: 135, x1: -70.7, y1: 70.7 },
+  {
+    first: "#3D4E81",
+    second: "#5753C9",
+    third: "#6E7FF3",
+    angle: -45,
+    x1: 70.7,
+    y1: -70.7,
+  },
+  {
+    first: "#C6FFDD",
+    second: "#FBD786",
+    third: "#F7797D",
+    angle: 135,
+    x1: -70.7,
+    y1: 70.7,
+  },
+  { first: "#F8D081", second: "#EE8144", angle: 135, x1: -70.7, y1: 70.7 },
+  { first: "#F83600", second: "#F9D423", angle: -45, x1: 70.7, y1: -70.7 },
+  { first: "#D4FC79", second: "#96E6A1", angle: 135, x1: -70.7, y1: 70.7 },
+  { first: "#43E97B", second: "#38F9D7", angle: 135, x1: -70.7, y1: 70.7 },
+  { first: "#F9F047", second: "#0FD850", angle: 135, x1: -70.7, y1: 70.7 },
+  {
+    first: "#69EACB",
+    second: "#EACCF8",
+    third: "#6654F1",
+    angle: -225,
+    x1: 95.1,
+    y1: -30.9,
+  },
+  {
+    first: "#D7EBEB",
+    second: "#F4AFE9",
+    third: "#9D7EF3",
+    angle: 135,
+    x1: -70.7,
+    y1: 70.7,
+  },
+  {
+    first: "#505285",
+    second: "#585E92",
+    third: "#65689F",
+    angle: -45,
+    x1: 70.7,
+    y1: -70.7,
+  },
+  {
+    first: "#45BEE8",
+    second: "#D6A1AC",
+    third: "#E88C5D",
+    angle: 113.96,
+    x1: -39.3,
+    y1: 91.2,
+  },
+  {
+    first: "#45E99F",
+    second: "#D5A89B",
+    third: "#E84698",
+    angle: 113.96,
+    x1: -39.3,
+    y1: 91.2,
+  },
 ];
 
 export const COSMIC_GRADIENTS_IMAGES = [
@@ -648,7 +748,8 @@ export interface ScreenImage {
   src: string;
   device: string;
   variant: string;
-  type?: OpenType;
+  type: OpenType;
+  screenSize: string;
 }
 
 export enum OpenType {
@@ -669,6 +770,7 @@ export const SCREENS: ScreenImage[] = [
     device: "Android",
     variant: "Hazel",
     type: OpenType.ANDROID,
+    screenSize: "720/1560",
   },
   {
     name: "Android Obsidian",
@@ -676,6 +778,7 @@ export const SCREENS: ScreenImage[] = [
     device: "Android",
     variant: "Obsidian",
     type: OpenType.ANDROID,
+    screenSize: "720/1560",
   },
   {
     name: "Android Snow",
@@ -683,6 +786,7 @@ export const SCREENS: ScreenImage[] = [
     device: "Android",
     variant: "Snow",
     type: OpenType.ANDROID,
+    screenSize: "720/1560",
   },
 
   // iPad
@@ -692,6 +796,7 @@ export const SCREENS: ScreenImage[] = [
     device: "iPad",
     variant: "Silver",
     type: OpenType.IPAD,
+    screenSize: "2048/2732",
   },
   {
     name: "iPad Space Gray",
@@ -699,6 +804,7 @@ export const SCREENS: ScreenImage[] = [
     device: "iPad",
     variant: "Space Gray",
     type: OpenType.IPAD,
+    screenSize: "2048/2732",
   },
 
   // iPhone 17
@@ -708,6 +814,7 @@ export const SCREENS: ScreenImage[] = [
     device: "iPhone 17",
     variant: "Black",
     type: OpenType.IPHONE_17,
+    screenSize: "402/874",
   },
   {
     name: "iPhone 17 Lavender",
@@ -715,6 +822,7 @@ export const SCREENS: ScreenImage[] = [
     device: "iPhone 17",
     variant: "Lavender",
     type: OpenType.IPHONE_17,
+    screenSize: "402/874",
   },
   {
     name: "iPhone 17 Mist Blue",
@@ -722,6 +830,7 @@ export const SCREENS: ScreenImage[] = [
     device: "iPhone 17",
     variant: "Mist Blue",
     type: OpenType.IPHONE_17,
+    screenSize: "402/874",
   },
   {
     name: "iPhone 17 Sage",
@@ -729,6 +838,7 @@ export const SCREENS: ScreenImage[] = [
     device: "iPhone 17",
     variant: "Sage",
     type: OpenType.IPHONE_17,
+    screenSize: "402/874",
   },
   {
     name: "iPhone 17 White",
@@ -736,6 +846,7 @@ export const SCREENS: ScreenImage[] = [
     device: "iPhone 17",
     variant: "White",
     type: OpenType.IPHONE_17,
+    screenSize: "402/874",
   },
 
   // MacBook Air
@@ -745,6 +856,7 @@ export const SCREENS: ScreenImage[] = [
     device: "MacBook Air",
     variant: "Midnight",
     type: OpenType.MACBOOK_AIR,
+    screenSize: "2560/1664",
   },
   {
     name: "MacBook Air Silver",
@@ -752,6 +864,7 @@ export const SCREENS: ScreenImage[] = [
     device: "MacBook Air",
     variant: "Silver",
     type: OpenType.MACBOOK_AIR,
+    screenSize: "2560/1664",
   },
   {
     name: "MacBook Air Space Gray",
@@ -759,6 +872,7 @@ export const SCREENS: ScreenImage[] = [
     device: "MacBook Air",
     variant: "Space Gray",
     type: OpenType.MACBOOK_AIR,
+    screenSize: "2560/1664",
   },
   {
     name: "MacBook Air Starlight",
@@ -766,14 +880,17 @@ export const SCREENS: ScreenImage[] = [
     device: "MacBook Air",
     variant: "Starlight",
     type: OpenType.MACBOOK_AIR,
+    screenSize: "2560/1664",
   },
 
+  // MacBook Pro
   {
     name: "Mac Silver",
     src: "/screens/mac/silver.png",
     device: "Mac",
     variant: "Silver",
-    type: OpenType.MACBOOK_AIR,
+    type: OpenType.MACBOOK_PRO,
+    screenSize: "3456/2234",
   },
 
   // Apple Watch
@@ -783,13 +900,7 @@ export const SCREENS: ScreenImage[] = [
     device: "Apple Watch",
     variant: "Rose Gold",
     type: OpenType.WATCH_SE,
-  },
-  {
-    name: "Apple Watch SE Aluminum Midnight",
-    src: "/screens/watch/se-aluminum-midnight.png",
-    device: "Apple Watch SE",
-    variant: "Aluminum Midnight",
-    type: OpenType.WATCH_SE,
+    screenSize: "416/496",
   },
 
   // Apple Watch Ultra
@@ -799,6 +910,7 @@ export const SCREENS: ScreenImage[] = [
     device: "Apple Watch Ultra",
     variant: "Black Ocean Band Navy",
     type: OpenType.WATCH_ULTRA,
+    screenSize: "410/502",
   },
   {
     name: "Apple Watch Ultra Black Titanium Loop",
@@ -806,6 +918,7 @@ export const SCREENS: ScreenImage[] = [
     device: "Apple Watch Ultra",
     variant: "Black Titanium Loop",
     type: OpenType.WATCH_ULTRA,
+    screenSize: "410/502",
   },
   {
     name: "Apple Watch Ultra Black Trail Loop Black",
@@ -813,6 +926,7 @@ export const SCREENS: ScreenImage[] = [
     device: "Apple Watch Ultra",
     variant: "Black Trail Loop Black",
     type: OpenType.WATCH_ULTRA,
+    screenSize: "410/502",
   },
   {
     name: "Apple Watch Ultra Natural",
@@ -820,6 +934,7 @@ export const SCREENS: ScreenImage[] = [
     device: "Apple Watch Ultra",
     variant: "Natural",
     type: OpenType.WATCH_ULTRA,
+    screenSize: "410/502",
   },
 ];
 
@@ -828,35 +943,53 @@ export const SCREEN_PREVIEW = [
     device: "iPhone 17",
     src: "/screens/preview/iphone/17.png",
     type: OpenType.IPHONE_17,
+    defaultVariant: "Black",
   },
   {
     device: "Apple Watch SE",
     src: "/screens/preview/watch/se.png",
     type: OpenType.WATCH_SE,
+    defaultVariant: "Rose Gold",
   },
   {
     device: "Apple Watch Ultra",
     src: "/screens/preview/watch/ultra.png",
     type: OpenType.WATCH_ULTRA,
+    defaultVariant: "Black Ocean Band Navy",
   },
   {
     device: "MacBook Air",
     src: "/screens/preview/mac/air.png",
     type: OpenType.MACBOOK_AIR,
+    defaultVariant: "Midnight",
   },
   {
     device: "MacBook Pro",
     src: "/screens/preview/mac/pro.png",
     type: OpenType.MACBOOK_PRO,
+    defaultVariant: "Silver",
   },
   {
     device: "iPad",
     src: "/screens/preview/ipad/1.png",
     type: OpenType.IPAD,
+    defaultVariant: "Silver",
   },
   {
     device: "Android",
     src: "/screens/preview/android/1.png",
     type: OpenType.ANDROID,
+    defaultVariant: "Hazel",
   },
 ];
+
+// Map device types to their display mask SVG paths
+export const DEVICE_MASKS: Record<string, string> = {
+  [OpenType.IPHONE_17]: "/masks/iphone-17-display.svg",
+  [OpenType.ANDROID]: "/masks/android-display.svg",
+  [OpenType.IPAD]: "/masks/ipad-display.svg",
+  [OpenType.MACBOOK_AIR]: "/masks/macbook-air-display.svg",
+  [OpenType.MACBOOK_PRO]: "/masks/macbook-pro-display.svg",
+  [OpenType.WATCH_SE]: "/masks/watch-se-display.svg",
+  [OpenType.WATCH_ULTRA]: "/masks/watch-ultra-display.svg",
+};

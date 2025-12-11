@@ -78,7 +78,7 @@ export interface UnsplashPhoto {
 
 export const searchAction = async (
   searchQuery: string,
-  page: number
+  page: number,
 ): Promise<UnsplashPhoto[]> => {
   try {
     const res = await fetch(
@@ -87,7 +87,7 @@ export const searchAction = async (
         headers: {
           Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
         },
-      }
+      },
     );
 
     if (!res.ok) {

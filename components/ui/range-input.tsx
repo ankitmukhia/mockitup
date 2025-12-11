@@ -32,19 +32,19 @@ export const RangeInput = ({
     const safeMax = max || 100;
     const safeValue = value || 0;
     const percentage = ((safeValue - safeMin) / (safeMax - safeMin)) * 100;
-    return percentage > 0 && percentage < 100 ? percentage + 2 : percentage;
+    return percentage > 0 && percentage < 100 ? percentage + 3 : percentage;
   }, [min, max, value]);
 
   return (
     <div
       className={cn(
         "group relative flex items-center w-full h-8 overflow-hidden bg-background rounded-lg",
-        className
+        className,
       )}
     >
       {fill && (
         <div
-          className="absolute inset-0 bg-muted rounded-lg pointer-events-none z-0"
+          className="absolute inset-0 bg-sidebar-border rounded-lg pointer-events-none z-0"
           style={{ width: `${percentage}%` }}
         />
       )}
@@ -54,7 +54,7 @@ export const RangeInput = ({
         className={cn(
           "w-full h-full appearance-none bg-transparent rounded-lg group-hover:cursor-grab active:cursor-grabbing z-10",
           thumbSize,
-          (percentage === 0 || percentage === 100) && "px-2"
+          (percentage === 0 || percentage === 100) && "px-2",
         )}
         min={min}
         max={max}

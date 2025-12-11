@@ -1,3 +1,4 @@
+import { del, get, set } from "idb-keyval";
 import {
   SingleColor,
   ThreeColorGradient,
@@ -8,13 +9,28 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { SOLID_COLORS } from "@/lib/constants";
 import { createSelectors } from "./create-selectors";
 
-type UpdateType = "noiseOpacity" | "blur" | "canvasRadius";
+type ScreenType =
+  | "default"
+  | "android"
+  | "ipad"
+  | "se"
+  | "ultra"
+  | "macbook-air"
+  | "macbook-pro"
+  | "iphone-17";
+
+type UpdateType = "noiseOpacity" | "blur";
+export type ImageSettingType = "border" | "outline" | "glass";
 
 interface MockupStore {
+  position: { x: number; y: number };
+  currentScreen: {
+    type: ScreenType;
+    variant: string;
+  };
   settings: {
     noiseOpacity: number;
     blur: number;
-    canvasRadius: number;
   };
   zoom: number;
 
@@ -29,16 +45,30 @@ interface MockupStore {
   mockupImage: string;
   backgroundImage: string | null;
   gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null;
-  solidBackgroundColor: string;
+  solidBackgroundColor: string | null;
   solidBackgroundColors: Array<string>;
+  shadowOverlay: string | null;
   colorPalette: {
     singles: SingleColor[];
     twoColorGradients: TwoColorGradient[];
     threeColorGradients: ThreeColorGradient[];
   };
+  imageSettings: {
+    border: boolean;
+    outline: boolean;
+    glass: boolean;
+  };
+  borderRadius: string;
+  concentricBorderRadius: boolean;
+  imageSettingsColor: string;
 }
 
 interface MockupStoreActions {
+  setPosition: (position: { x: number; y: number }) => void;
+  setCurrentScreen: (currentScreen: {
+    type: ScreenType;
+    variant: string;
+  }) => void;
   setSettings: (updateType: UpdateType, setting: number) => void;
   setRotationX: (rotationX: number) => void;
   setRotationY: (rotationY: number) => void;
@@ -50,44 +80,101 @@ interface MockupStoreActions {
   setMockupImage: (mockupImage: string) => void;
   setBackgroundImage: (backgroundImage: string | null) => void;
   setGradientBackgroundColor: (
-    gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null
+    gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null,
   ) => void;
-  setSolidBackgroundColor: (newColor: string) => void;
+  setSolidBackgroundColor: (newColor: string | null) => void;
   setSolidBackgroundColors: (solidBackgroundColor: string) => void;
+  setShadowOverlay: (shadowOverlay: string | null) => void;
   setColorPalette: (colorPalette: {
     singles: SingleColor[];
     twoColorGradients: TwoColorGradient[];
     threeColorGradients: ThreeColorGradient[];
   }) => void;
+  setImageSettings: (type: ImageSettingType) => void;
+  updateImageSettingsColor: (color: string) => void;
+  setBorderRadius: (borderRadius: string) => void;
+  setConcentricBorderRadius: (concentricBorderRadius: boolean) => void;
 }
 
 const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
   persist(
     (set, get) => ({
-      settings: {
-        noiseOpacity: 0,
-        blur: 0,
-        canvasRadius: 0,
+      position: { x: 0, y: 0 },
+      currentScreen: {
+        type: "default",
+        variant: "",
       },
-      zoom: 0.75,
+      settings: {
+        noiseOpacity: 15,
+        blur: 28,
+      },
+      imageSettings: {
+        border: false,
+        outline: false,
+        glass: true,
+      },
+      concentricBorderRadius: false,
+      borderRadius: "23",
+      imageSettingsColor: "#fff",
+      zoom: 0.85,
       rotationX: 0,
-      rotationY: 0,
+      rotationY: 30,
       flipH: false,
       flipV: false,
       rotationZ: 0,
       mockupImage:
         "https://res.cloudinary.com/dtxxjwdml/image/upload/v1764985625/ewyhgstlvunmr5xesvqj.png",
-      backgroundImage: null,
+      backgroundImage: "/mystic-gradient/mystic-2.jpg",
       gradientBackgroundColor: null,
-      solidBackgroundColor: "#3F4F44",
+      solidBackgroundColor: null,
       solidBackgroundColors: SOLID_COLORS,
-      resolution: { width: 2778, height: 1284 },
+      shadowOverlay: null,
+      resolution: { width: 1920, height: 1080 },
       colorPalette: {
         singles: [] as SingleColor[],
         twoColorGradients: [] as TwoColorGradient[],
         threeColorGradients: [] as ThreeColorGradient[],
       },
 
+      setPosition: (position: { x: number; y: number }) => {
+        set({ position });
+      },
+      updateImageSettingsColor: (color: string) => {
+        set({ imageSettingsColor: color });
+      },
+      setBorderRadius: (borderRadius: string) => {
+        set({ borderRadius });
+      },
+      setConcentricBorderRadius: (concentricBorderRadius: boolean) => {
+        set({ concentricBorderRadius });
+      },
+      setImageSettings: (type: ImageSettingType) => {
+        switch (type) {
+          case "border":
+            set({
+              imageSettings: { border: true, outline: false, glass: false },
+            });
+            break;
+          case "outline":
+            set({
+              imageSettings: { border: false, outline: true, glass: false },
+            });
+            break;
+          case "glass":
+            set({
+              imageSettings: { border: false, outline: false, glass: true },
+            });
+            break;
+          default:
+            set({
+              imageSettings: { border: false, outline: false, glass: false },
+            });
+            break;
+        }
+      },
+      setCurrentScreen: (currentScreen) => {
+        set({ currentScreen });
+      },
       setRotationX: (rotationX) => set({ rotationX }),
       setRotationY: (rotationY) => set({ rotationY }),
       setRotationZ: (rotationZ) => set({ rotationZ }),
@@ -103,9 +190,6 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
           case "blur":
             set({ settings: { ...settings, blur: setting } });
             break;
-          case "canvasRadius":
-            set({ settings: { ...settings, canvasRadius: setting } });
-            break;
         }
       },
       setZoom: (zoom) => set({ zoom }),
@@ -119,14 +203,26 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
         const { solidBackgroundColors } = get();
         set({ solidBackgroundColors: [...solidBackgroundColors, newColor] });
       },
+      setShadowOverlay: (shadowOverlay) => set({ shadowOverlay }),
       setResolution: (resolution) => set({ resolution }),
       setColorPalette: (colorPalette) => set({ colorPalette }),
     }),
     {
       name: "mockup-store",
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
+      storage: createJSONStorage(() => ({
+        getItem: async (name: string): Promise<string | null> => {
+          const value = await get(name);
+          return value || null;
+        },
+        setItem: async (name: string, value: string): Promise<void> => {
+          await set(name, value);
+        },
+        removeItem: async (name: string): Promise<void> => {
+          await del(name);
+        },
+      })),
+    },
+  ),
 );
 
 export const useMockupStore = createSelectors(useMockupStoreBase);
