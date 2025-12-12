@@ -223,7 +223,7 @@ export const Preview = () => {
 
           <div>
             {currentScreen.type === "default" ? (
-              <div className="absolute inset-0">
+              <div className="absolute inset-0 z-20">
                 <div
                   className="relative w-full h-full flex items-center justify-center"
                   style={{
@@ -426,7 +426,7 @@ export const Preview = () => {
                         >
                           {/* Device screen */}
                           <div
-                            className="pointer-events-none w-full h-full absolute top-0 left-0 z-1"
+                            className="pointer-events-none w-full h-full absolute top-0 left-0 z-10"
                             style={{
                               transform: `scale(${deviceAssetScale})`,
                             }}
@@ -443,7 +443,7 @@ export const Preview = () => {
 
                           {/* Device mask */}
                           <div
-                            className="w-full h-full"
+                            className="w-full h-full relative z-0"
                             style={{
                               aspectRatio: `${width}/${height}`,
                               maskImage: `url(${maskPath})`,

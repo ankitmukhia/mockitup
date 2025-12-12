@@ -3,6 +3,11 @@
 import { useMockupStore } from "@/stores/mockup-stores";
 import { RangeInput } from "@/components/ui/range-input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { RANGE_THUMB_SIZE } from "@/lib/constants";
 import { StackIcon, SingleIcon } from "@/assets/svg";
 import { PositionController } from "@/components/position-controller";
@@ -70,9 +75,23 @@ export const RightSidebar = () => {
             <TabsTrigger value="single" className="border-none rounded-full">
               <SingleIcon className="size-6" />
             </TabsTrigger>
-            <TabsTrigger value="double" className="border-none rounded-full">
-              <StackIcon className="size-6" />
-            </TabsTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex-1 flex items-center justify-center">
+                  <TabsTrigger
+                    value="double"
+                    className="border-none rounded-full cursor-not-allowed"
+                    disabled
+                  >
+                    <StackIcon className="size-6" />
+                  </TabsTrigger>
+                </div>
+              </TooltipTrigger>
+
+              <TooltipContent>
+                <p>Coming soon...</p>
+              </TooltipContent>
+            </Tooltip>
           </TabsList>
 
           <RangeInput

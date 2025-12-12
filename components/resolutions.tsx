@@ -24,7 +24,7 @@ export const Resolutions = () => {
               RESOLUTION_PRESETS.find(
                 (preset) =>
                   preset.width === resolution.width &&
-                  preset.height === resolution.height,
+                  preset.height === resolution.height
               )?.name
             }
           </span>
@@ -43,7 +43,7 @@ export const Resolutions = () => {
           <h1 className="text-sm">Regular</h1>
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
-              (preset) => preset.category === CATEGORY_NAMES.REGULAR,
+              (preset) => preset.category === CATEGORY_NAMES.REGULAR
             ).map((preset, index) => (
               <div
                 key={index}
@@ -67,7 +67,7 @@ export const Resolutions = () => {
           <h1 className="text-sm">Mobile Devices</h1>
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
-              (preset) => preset.category === CATEGORY_NAMES.MOBILE_DEVICES,
+              (preset) => preset.category === CATEGORY_NAMES.MOBILE_DEVICES
             ).map((preset, index) => (
               <div
                 key={index}
@@ -91,7 +91,7 @@ export const Resolutions = () => {
           <h1 className="text-sm">Tablet Devices</h1>
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
-              (preset) => preset.category === CATEGORY_NAMES.TABLETS,
+              (preset) => preset.category === CATEGORY_NAMES.TABLETS
             ).map((preset, index) => (
               <div
                 key={index}
@@ -115,7 +115,7 @@ export const Resolutions = () => {
           <h1 className="text-sm">Metadata</h1>
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
-              (preset) => preset.category === CATEGORY_NAMES.METADATA,
+              (preset) => preset.category === CATEGORY_NAMES.METADATA
             ).map((preset, index) => (
               <div
                 key={index}
@@ -139,7 +139,7 @@ export const Resolutions = () => {
           <h1 className="text-sm">Facebook</h1>
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
-              (preset) => preset.category === CATEGORY_NAMES.FACEBOOK,
+              (preset) => preset.category === CATEGORY_NAMES.FACEBOOK
             ).map((preset, index) => (
               <div
                 key={index}
@@ -163,7 +163,7 @@ export const Resolutions = () => {
           <h1 className="text-sm">Instagram</h1>
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
-              (preset) => preset.category === CATEGORY_NAMES.INSTAGRAM,
+              (preset) => preset.category === CATEGORY_NAMES.INSTAGRAM
             ).map((preset, index) => (
               <div
                 key={index}
@@ -187,7 +187,7 @@ export const Resolutions = () => {
           <h1 className="text-sm">Twitter</h1>
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
-              (preset) => preset.category === CATEGORY_NAMES.TWITTER,
+              (preset) => preset.category === CATEGORY_NAMES.TWITTER
             ).map((preset, index) => (
               <div
                 key={index}
@@ -211,7 +211,7 @@ export const Resolutions = () => {
           <h1 className="text-sm">LinkedIn</h1>
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
-              (preset) => preset.category === CATEGORY_NAMES.LINKEDIN,
+              (preset) => preset.category === CATEGORY_NAMES.LINKEDIN
             ).map((preset, index) => (
               <div
                 key={index}
@@ -236,7 +236,7 @@ export const Resolutions = () => {
           <div className="grid grid-cols-3 gap-2">
             {RESOLUTION_PRESETS.filter(
               (preset) =>
-                preset.category === CATEGORY_NAMES.DESKTOP_AND_MONITORS,
+                preset.category === CATEGORY_NAMES.DESKTOP_AND_MONITORS
             ).map((preset, index) => (
               <div
                 key={index}
