@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Mockitup",
-  description: "Mockitup - The best mockup generator",
+  title: "Mockitup | Simple Mockup Generator",
+  description: "Mockitup - Present your product in the best way possible",
   keywords: [
     "mockup",
     "mockitup",
@@ -35,26 +35,29 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Mockitup",
     description: "Mockitup - The best mockup generator",
+    type: "website",
     siteName: "Mockitup",
+    url: "https://mockitupp.vercel.app",
+    locale: "en_US",
     images: [
       {
         url: "https://mockitupp.vercel.app/og.png",
         width: 1200,
         height: 630,
-        alt: "Mockitup - The best mockup generator",
+        alt: "Mockitup",
       },
     ],
   },
   twitter: {
+    card: "summary_large_image",
     title: "Mockitup",
     description: "Mockitup - The best mockup generator",
-    card: "summary_large_image",
     images: [
       {
         url: "https://mockitupp.vercel.app/twitter.png",
         width: 1200,
         height: 630,
-        alt: "Mockitup - The best mockup generator",
+        alt: "Mockitup",
       },
     ],
   },
