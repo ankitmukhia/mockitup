@@ -33,15 +33,15 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL("https://mockitupp.vercel.app"),
   openGraph: {
-    title: "Mockitup",
-    description: "Mockitup - The best mockup generator",
+    title: "Mockitup | Simple Mockup Generator",
+    description: "Mockitup - Present your product in the best way possible",
     type: "website",
     siteName: "Mockitup",
     url: "https://mockitupp.vercel.app",
     locale: "en_US",
     images: [
       {
-        url: "https://mockitupp.vercel.app/og.png",
+        url: "https://mockitupp.vercel.app/og-mockitup.png",
         width: 1200,
         height: 630,
         alt: "Mockitup",
@@ -50,11 +50,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mockitup",
-    description: "Mockitup - The best mockup generator",
+    title: "Mockitup | Simple Mockup Generator",
+    description: "Mockitup - Present your product in the best way possible",
     images: [
       {
-        url: "https://mockitupp.vercel.app/twitter.png",
+        url: "https://mockitupp.vercel.app/twitter-mockitup.png",
         width: 1200,
         height: 630,
         alt: "Mockitup",
