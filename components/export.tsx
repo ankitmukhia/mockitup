@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toPng, toJpeg } from "html-to-image";
+import { useMockupStore } from "@/stores/mockup-stores";
 import {
   Download,
   Loader2,
@@ -17,6 +18,7 @@ import { Button } from "./ui/button";
 export const Export = () => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { blur } = useMockupStore.use.settings();
 
   const handleExport = async (type: "png" | "jpg") => {
     const node = document.getElementById("mockup-container");
@@ -26,7 +28,51 @@ export const Export = () => {
 
     setLoading(true);
 
+    // this is just a workaround for backdrop-filter not working in html-to-image
+    // improve it more in future
+    // TODO: improve workaround
+
+    // Direct DOM Manipulation variables
+    const blurLayer = document.querySelector(
+      '[data-id="mockup-blur"]'
+    ) as HTMLElement;
+    const backgroundLayer = document.querySelector(
+      '[data-id="mockup-background"]'
+    ) as HTMLElement;
+
+    // Store original styles to restore later
+    const originalBlurDisplay = blurLayer ? blurLayer.style.display : "";
+    const originalBgFilter = backgroundLayer
+      ? backgroundLayer.style.filter
+      : "";
+    const originalBgTransform = backgroundLayer
+      ? backgroundLayer.style.transform
+      : "";
+
     try {
+      // Apply workaround styles directly to DOM
+      const blurValue = Number(blur);
+      if (blurLayer && backgroundLayer && blurValue > 0) {
+        // Hide the original blur layer
+        blurLayer.style.display = "none";
+
+        // Apply blur to background
+        backgroundLayer.style.filter = `blur(${blurValue}px)`;
+
+        // Apply scale to background
+        const width = parseInt(backgroundLayer.style.width);
+        if (width && width > 0) {
+          const scaleFactor = 1 + (blurValue * 4) / width;
+          // Append scale to existing transform
+          backgroundLayer.style.transform += ` scale(${scaleFactor})`;
+        } else {
+          backgroundLayer.style.transform += " scale(1.05)";
+        }
+      }
+
+      // Add delay to allow DOM updates to paint
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       let dataUrl;
       const options = {
         pixelRatio: 2, // Better quality
@@ -50,6 +96,14 @@ export const Export = () => {
     } catch (error) {
       console.error("Failed to export image", error);
     } finally {
+      // Restore original styles
+      if (blurLayer) {
+        blurLayer.style.display = originalBlurDisplay;
+      }
+      if (backgroundLayer) {
+        backgroundLayer.style.filter = originalBgFilter;
+        backgroundLayer.style.transform = originalBgTransform;
+      }
       setLoading(false);
     }
   };

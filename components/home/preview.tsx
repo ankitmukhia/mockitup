@@ -158,6 +158,7 @@ export const Preview = () => {
           }}
         >
           <div
+            data-id="mockup-background"
             className="absolute inset-0"
             style={{
               width: `${resolution.width}px`,
@@ -192,6 +193,7 @@ export const Preview = () => {
 
           {blur > 0 && (
             <div
+              data-id="mockup-blur"
               className="absolute inset-0"
               style={{
                 backdropFilter: `blur(${blur}px)`,
