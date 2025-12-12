@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     siteName: "Mockitup",
     images: [
       {
-        url: "/og.png",
+        url: "https://mockitupp.vercel.app/og.png",
         width: 1200,
         height: 630,
         alt: "Mockitup - The best mockup generator",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: [
       {
-        url: "/twitter.png",
+        url: "https://mockitupp.vercel.app/twitter.png",
         width: 1200,
         height: 630,
         alt: "Mockitup - The best mockup generator",
