@@ -83,7 +83,7 @@ interface MockupStoreActions {
   setMockupImage: (mockupImage: string) => void;
   setBackgroundImage: (backgroundImage: string | null) => void;
   setGradientBackgroundColor: (
-    gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null
+    gradientBackgroundColor: TwoColorGradient | ThreeColorGradient | null,
   ) => void;
   setSolidBackgroundColor: (newColor: string | null) => void;
   setSolidBackgroundColors: (solidBackgroundColor: string) => void;
@@ -234,8 +234,8 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
           await del(name);
         },
       })),
-    }
-  )
+    },
+  ),
 );
 
 export const useMockupStore = createSelectors(useMockupStoreBase);

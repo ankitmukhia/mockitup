@@ -34,10 +34,10 @@ export const Export = () => {
 
     // Direct DOM Manipulation variables
     const blurLayer = document.querySelector(
-      '[data-id="mockup-blur"]'
+      '[data-id="mockup-blur"]',
     ) as HTMLElement;
     const backgroundLayer = document.querySelector(
-      '[data-id="mockup-background"]'
+      '[data-id="mockup-background"]',
     ) as HTMLElement;
 
     // Store original styles to restore later

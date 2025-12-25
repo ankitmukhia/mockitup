@@ -70,7 +70,7 @@ export const Preview = () => {
     containerSize.width && containerSize.height
       ? Math.min(
           (containerSize.width - padding) / resolution.width,
-          (containerSize.height - padding) / resolution.height
+          (containerSize.height - padding) / resolution.height,
         )
       : 0.5;
 
@@ -83,7 +83,7 @@ export const Preview = () => {
   };
 
   const handleMockUpImageSelect = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -174,20 +174,20 @@ export const Preview = () => {
                     backgroundPosition: "center",
                   }
                 : gradientBackgroundColor
-                ? {
-                    backgroundImage: `linear-gradient(${
-                      gradientBackgroundColor.angle
-                    }deg, ${gradientBackgroundColor.first}, ${
-                      gradientBackgroundColor.second
-                    }${
-                      "third" in gradientBackgroundColor
-                        ? `, ${gradientBackgroundColor.third}`
-                        : ""
-                    })`,
-                  }
-                : {
-                    backgroundColor: solidBackgroundColor || "transparent",
-                  }),
+                  ? {
+                      backgroundImage: `linear-gradient(${
+                        gradientBackgroundColor.angle
+                      }deg, ${gradientBackgroundColor.first}, ${
+                        gradientBackgroundColor.second
+                      }${
+                        "third" in gradientBackgroundColor
+                          ? `, ${gradientBackgroundColor.third}`
+                          : ""
+                      })`,
+                    }
+                  : {
+                      backgroundColor: solidBackgroundColor || "transparent",
+                    }),
             }}
           />
 
@@ -320,7 +320,7 @@ export const Preview = () => {
                         setIsImageLoaded(true);
                         const img = e.target as HTMLImageElement;
                         setImageAspectRatio(
-                          img.naturalWidth / img.naturalHeight
+                          img.naturalWidth / img.naturalHeight,
                         );
                         extractColorFromImage(img);
                       }}
@@ -354,7 +354,7 @@ export const Preview = () => {
                 const screen = SCREENS.find(
                   (s) =>
                     s.type === currentScreen.type &&
-                    s.variant === currentScreen.variant
+                    s.variant === currentScreen.variant,
                 );
                 if (!screen) return null;
 
@@ -418,7 +418,7 @@ export const Preview = () => {
                         <div
                           className={cn(
                             `absolute group will-change-transform w-full h-auto`,
-                            `aspect-[${width}/${height}]`
+                            `aspect-[${width}/${height}]`,
                           )}
                           onClick={() => {
                             if (mockupInputRef.current) {
