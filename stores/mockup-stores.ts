@@ -9,6 +9,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { SOLID_COLORS } from "@/lib/constants";
 import { createSelectors } from "./create-selectors";
 
+const STORE_NAME = "mockup-store";
+
 type ScreenType =
   | "default"
   | "android"
@@ -221,7 +223,7 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
       setColorPalette: (colorPalette) => set({ colorPalette }),
     }),
     {
-      name: "mockup-store",
+      name: STORE_NAME,
       storage: createJSONStorage(() => ({
         getItem: async (name: string): Promise<string | null> => {
           const value = await get(name);
@@ -239,3 +241,49 @@ const useMockupStoreBase = create<MockupStore & MockupStoreActions>()(
 );
 
 export const useMockupStore = createSelectors(useMockupStoreBase);
+
+const initialState: MockupStore = {
+  position: { x: 0, y: 0 },
+  currentScreen: {
+    type: "default",
+    variant: "",
+  },
+  settings: {
+    noiseOpacity: 15,
+    blur: 28,
+  },
+  imageSettings: {
+    border: false,
+    outline: false,
+    glass: true,
+  },
+  concentricBorderRadius: false,
+  borderRadius: "23",
+  imageSettingsColor: "#fff",
+  imageShadow: "None",
+  imageStack: "none",
+  zoom: 0.85,
+  rotationX: 0,
+  rotationY: 30,
+  flipH: false,
+  flipV: false,
+  rotationZ: 0,
+  mockupImage:
+    "https://res.cloudinary.com/dtxxjwdml/image/upload/v1764985625/ewyhgstlvunmr5xesvqj.png",
+  backgroundImage: "/mystic-gradient/mystic-2.jpg",
+  gradientBackgroundColor: null,
+  solidBackgroundColor: null,
+  solidBackgroundColors: SOLID_COLORS,
+  shadowOverlay: null,
+  resolution: { width: 1920, height: 1080 },
+  colorPalette: {
+    singles: [] as SingleColor[],
+    twoColorGradients: [] as TwoColorGradient[],
+    threeColorGradients: [] as ThreeColorGradient[],
+  },
+};
+
+export const resetStore = async () => {
+  await del(STORE_NAME);
+  useMockupStoreBase.setState(initialState);
+};

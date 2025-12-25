@@ -84,6 +84,7 @@ export const LeftSidebar = () => {
   const currentScreen = useMockupStore.use.currentScreen();
   const settings = useMockupStore.use.settings();
   const colorPalette = useMockupStore.use.colorPalette();
+  console.log("color  palete: ", colorPalette);
   const solidBackgroundColor = useMockupStore.use.solidBackgroundColor();
   const solidBackgroundColors = useMockupStore.use.solidBackgroundColors();
   const mockupImage = useMockupStore.use.mockupImage();
@@ -836,10 +837,12 @@ export const LeftSidebar = () => {
 
           <div className="space-y-5">
             <div className="flex flex-col gap-2">
-              <p className="text-xs font-medium flex items-center gap-1">
-                <SparkleIcon className="size-4" />
-                Auto Palette
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-medium flex items-center gap-1">
+                  <SparkleIcon className="size-4" />
+                  Auto Palette
+                </p>
+              </div>
 
               <div className="space-y-1">
                 <div className="grid grid-cols-4 gap-1">

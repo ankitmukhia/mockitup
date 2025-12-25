@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import ColorThief from "colorthief";
+// import { SymbolIcon } from "@radix-ui/react-icons";
 import { blendPalette } from "@/lib/color-blender";
 import { SCREENS, DEVICE_MASKS, OpenType } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -81,6 +82,18 @@ export const Preview = () => {
     const blended = blendPalette(palette);
     setColorPalette(blended);
   };
+
+  useEffect(() => {
+    if (mockupImage) {
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.src = mockupImage;
+
+      img.onload = (e) => {
+        extractColorFromImage(e.target as HTMLImageElement);
+      };
+    }
+  }, [mockupImage]);
 
   const handleMockUpImageSelect = (
     event: React.ChangeEvent<HTMLInputElement>,

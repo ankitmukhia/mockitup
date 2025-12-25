@@ -1,6 +1,10 @@
+"use client";
+
 import { LeftSidebar } from "@/components/home/left-sidebar";
 import { Preview } from "@/components/home/preview";
 import { RightSidebar } from "@/components/home/right-sidebar";
+import { resetStore } from "@/stores/mockup-stores";
+import { SymbolIcon } from "@radix-ui/react-icons";
 import { Export } from "@/components/export";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
@@ -8,11 +12,19 @@ import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
 
 export const Desktop = () => {
+  const handleRemoveCache = async () => {
+    await resetStore();
+  };
+
   return (
     <div className="flex items-center justify-center h-svh p-2 gap-2 overflow-hidden">
       <LeftSidebar />
       <div className="fixed top-2 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 justify-center flex-wrap">
+          <Button onClick={handleRemoveCache}>
+            <SymbolIcon />
+            Start over
+          </Button>
           <Export />
           <Button asChild>
             <Link
